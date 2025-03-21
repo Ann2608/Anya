@@ -51,7 +51,7 @@ public class AnyaMv : MonoBehaviour
         // Kiểm tra đổi hướng
         if (IsFacingRight && move < 0 || !IsFacingRight && move > 0)
         {
-            Flip();
+            Flip()
         }
     }
 
