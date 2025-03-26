@@ -1,7 +1,7 @@
 using UnityEngine;
 using System.Collections;
 using System.Collections.Generic;
-using UnityEngine;
+
 
 public class PlayerController : MonoBehaviour
 {
@@ -62,7 +62,7 @@ public class PlayerController : MonoBehaviour
         if (isShoot == true || isCrouch == true)
         {
             //player dungy en
-            rb.velocity = Vector2.zero;
+            rb.linearVelocity = Vector2.zero;
         }
         //khi nguoi choi k ban
         else
@@ -70,9 +70,9 @@ public class PlayerController : MonoBehaviour
             //player di chuyen bth
 
             float moveX = Input.GetAxisRaw("Horizontal");
-            Vector2 directionMove = new Vector2(moveX * speedMove, rb.velocity.y);
+            Vector2 directionMove = new Vector2(moveX * speedMove, rb.linearVelocity.y);
 
-            rb.velocity = directionMove;
+            rb.linearVelocity = directionMove;
 
             if (moveX > 0)
             {
@@ -102,7 +102,7 @@ public class PlayerController : MonoBehaviour
     {
         if (Input.GetKeyDown(KeyCode.Space) && isGround == true && isCrouch == false)
         {
-            rb.velocity = Vector2.zero;
+            rb.linearVelocity = Vector2.zero;
             rb.AddForce(Vector2.up * jumpForce, ForceMode2D.Impulse);
         }
     }
@@ -143,7 +143,7 @@ public class PlayerController : MonoBehaviour
                 else
                 {
                     // dang o tren mat dat
-                    if (rb.velocity.x == 0)
+                    if (rb.linearVelocity.x == 0)
                     {
                         //nguoi choi dung yen
                         playerState = PlayerState.Idle;
@@ -158,7 +158,7 @@ public class PlayerController : MonoBehaviour
             else
             {
                 //dang o tren khong
-                if (rb.velocity.y > 0)
+                if (rb.linearVelocity.y > 0)
                 {
                     //nguoi choi dang nhay 
                     playerState = PlayerState.Jump;

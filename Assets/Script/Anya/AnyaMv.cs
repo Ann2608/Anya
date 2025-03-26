@@ -45,19 +45,19 @@ public class AnyaMv : MonoBehaviour
 
     void Movement(float move)       // giá trị move từ -1 đến 1
     {
-        rg.velocity = new Vector2(MvSpeed * move, rg.velocity.y);
+        rg.linearVelocity = new Vector2(MvSpeed * move, rg.linearVelocity.y);
         Speed = Mathf.Abs(MvSpeed * move);
 
         // Kiểm tra đổi hướng
         if (IsFacingRight && move < 0 || !IsFacingRight && move > 0)
         {
-            Flip()
+            Flip();
         }
     }
 
     void Jump()
     {
-        rg.velocity = new Vector2(rg.velocity.x, JumpHigh);
+        rg.linearVelocity = new Vector2(rg.linearVelocity.x, JumpHigh);
         Anim.SetBool("IsJumping", true);
         //SoundManager.instance.PlaySound(JumpSound);
     }
