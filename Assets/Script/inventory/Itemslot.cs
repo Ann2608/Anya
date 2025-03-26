@@ -13,6 +13,9 @@ public class Itemslot : MonoBehaviour, IPointerClickHandler
     public string itemDescription;
     public Sprite EmptySprite;
 
+    [SerializeField]
+    private int maxNumberOfItems;
+
 
 
     // ==================== item slot =========================================
@@ -38,13 +41,37 @@ public class Itemslot : MonoBehaviour, IPointerClickHandler
         iventoryManager = GameObject.Find("IvenCanvas").GetComponent<InventoryManager>();
     }
 
-    public void AddItem(string itemName, int quantity, Sprite sprite, string itemDescription)
+    public int AddItem(string itemName, int quantity, Sprite sprite, string itemDescription)
     {
+        // kiem tra xem iven day chua
+        if (isFull)
+        {
+            return quantity;
+        }
         this.itemName = itemName;
-        this.quantity = quantity;
+
+        this.quantity += quantity;
+        if (this.quantity >= maxNumberOfItems)
+        {
+            quantityText.text = maxNumberOfItems.ToString();
+            quantityText.enabled = true;
+            isFull = true;
+
+            //
+            int extraItems = this.quantity - maxNumberOfItems;
+            this.quantity = maxNumberOfItems;
+            return extraItems;
+
+        }  
+        quantityText.text = this.quantity.ToString();
+        quantityText.enabled = true;
+        return 0;
+
+
+
         this.sprite = sprite;
         this.itemDescription = itemDescription;
-        isFull = true;
+        
 
         quantityText.text = quantity.ToString();
         quantityText.enabled = true;

@@ -4,10 +4,15 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="bf5d8384-5e15-4d65-90fd-8ae4e3b63bb8" name="Changes" comment="iventory">
+    <list default="true" id="bf5d8384-5e15-4d65-90fd-8ae4e3b63bb8" name="Changes" comment="asas">
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Assets/Scenes/SampleScene.unity" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Scenes/SampleScene.unity" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/prefab/Item Slot.prefab" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/prefab/Item Slot.prefab.meta" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/Script/inventory/InventoryManager.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Script/inventory/InventoryManager.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/Script/inventory/Itemslot.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Script/inventory/Itemslot.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/Script/inventory/item.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Script/inventory/item.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Packages/manifest.json" beforeDir="false" afterPath="$PROJECT_DIR$/Packages/manifest.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Packages/packages-lock.json" beforeDir="false" afterPath="$PROJECT_DIR$/Packages/packages-lock.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/ProjectSettings/ProjectSettings.asset" beforeDir="false" afterPath="$PROJECT_DIR$/ProjectSettings/ProjectSettings.asset" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -15,6 +20,11 @@
     <option name="LAST_RESOLUTION" value="IGNORE" />
   </component>
   <component name="Git.Settings">
+    <option name="RECENT_BRANCH_BY_REPOSITORY">
+      <map>
+        <entry key="$PROJECT_DIR$" value="main" />
+      </map>
+    </option>
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
   </component>
   <component name="GitHubPullRequestSearchHistory">{
@@ -35,6 +45,8 @@
     <setting file="file://$PROJECT_DIR$/Assets/Script/Anya/AnyaHealth.cs" root0="FORCE_HIGHLIGHTING" />
     <setting file="file://$PROJECT_DIR$/Assets/Script/Anya/AnyaMv.cs" root0="FORCE_HIGHLIGHTING" />
     <setting file="file://$PROJECT_DIR$/Assets/Script/inventory/InventoryManager.cs" root0="SKIP_HIGHLIGHTING" />
+    <setting file="file://$PROJECT_DIR$/Assets/Script/inventory/Itemslot.cs" root0="SKIP_HIGHLIGHTING" />
+    <setting file="file://$PROJECT_DIR$/Assets/Script/inventory/item.cs" root0="SKIP_HIGHLIGHTING" />
   </component>
   <component name="MetaFilesCheckinStateConfiguration" checkMetaFiles="true" />
   <component name="ProjectColorInfo">{
@@ -51,7 +63,7 @@
     "Attach to Unity Editor.Attach to Unity Editor.executor": "Debug",
     "RunOnceActivity.ShowReadmeOnStart": "true",
     "RunOnceActivity.git.unshallow": "true",
-    "git-widget-placeholder": "main",
+    "git-widget-placeholder": "inven",
     "node.js.detected.package.eslint": "true",
     "node.js.detected.package.tslint": "true",
     "node.js.selected.package.eslint": "(autodetect)",
@@ -84,7 +96,7 @@
       <option name="presentableId" value="Default" />
       <updated>1742555266366</updated>
       <workItem from="1742555267563" duration="235000" />
-      <workItem from="1742982570671" duration="1311000" />
+      <workItem from="1742982570671" duration="4136000" />
     </task>
     <task id="LOCAL-00001" summary="kkk">
       <option name="closed" value="true" />
@@ -102,7 +114,15 @@
       <option name="project" value="LOCAL" />
       <updated>1742983316228</updated>
     </task>
-    <option name="localTasksCounter" value="3" />
+    <task id="LOCAL-00003" summary="asas">
+      <option name="closed" value="true" />
+      <created>1742984872837</created>
+      <option name="number" value="00003" />
+      <option name="presentableId" value="LOCAL-00003" />
+      <option name="project" value="LOCAL" />
+      <updated>1742984872837</updated>
+    </task>
+    <option name="localTasksCounter" value="4" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -117,6 +137,7 @@
     <option name="CLEAR_INITIAL_COMMIT_MESSAGE" value="true" />
     <MESSAGE value="kkk" />
     <MESSAGE value="iventory" />
-    <option name="LAST_COMMIT_MESSAGE" value="iventory" />
+    <MESSAGE value="asas" />
+    <option name="LAST_COMMIT_MESSAGE" value="asas" />
   </component>
 </project>

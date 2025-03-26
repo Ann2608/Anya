@@ -13,18 +13,24 @@ public class InventoryManager : MonoBehaviour
             InventoryMenu.SetActive(menuActived); // Hiển thị hoặc ẩn menu
         }
     }
-    public void AddItem (string itemName, int quantity , Sprite sprite, string itemDescription)
+    public int AddItem (string itemName, int quantity , Sprite sprite, string itemDescription)
     {
         Debug.Log("itemName = " + itemName + "quantity =" + quantity + "Sprite"+ sprite);
         for (int i = 0; i< itemslot.Length; i++)
         {
-            if (itemslot[i].isFull == false)
+            if (itemslot[i].isFull == false && itemslot[i].name == name || itemslot[i].quantity == 0)
             {
-                itemslot[i].AddItem(itemName, quantity, sprite, itemDescription);
-                return;
+                int leftOverItems = itemslot[i].AddItem(itemName, quantity, sprite, itemDescription);
+                if(leftOverItems > 0) 
+                { 
+                    leftOverItems = AddItem(itemName, quantity, sprite, itemDescription);
+                    return leftOverItems; 
+
+                }
+                
             }
         }
-
+        return quantity;
     }
     public void DeSelectAllSlots()
     {
