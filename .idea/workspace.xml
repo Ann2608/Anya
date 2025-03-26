@@ -4,20 +4,10 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="bf5d8384-5e15-4d65-90fd-8ae4e3b63bb8" name="Changes" comment="">
-      <change beforePath="$PROJECT_DIR$/Assets/Map/Legacy Vania Pack - Village - Update 0.4/Legacy Vania Pack - Village - Update 0.4/Assets/Tiles.aseprite.meta" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Map/Legacy Vania Pack - Village - Update 0.4/Legacy Vania Pack - Village - Update 0.4/Assets/Tiles.aseprite.meta" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/Map/Legacy Vania Pack - Village - Update 0.4/Legacy Vania Pack - Village - Update 0.4/Mobs/Skeleton.aseprite.meta" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Map/Legacy Vania Pack - Village - Update 0.4/Legacy Vania Pack - Village - Update 0.4/Mobs/Skeleton.aseprite.meta" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/Map/Legacy Vania Pack - Village - Update 0.4/Legacy Vania Pack - Village - Update 0.4/Social/All-01.aseprite.meta" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Map/Legacy Vania Pack - Village - Update 0.4/Legacy Vania Pack - Village - Update 0.4/Social/All-01.aseprite.meta" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/Map/Legacy Vania Pack - Village - Update 0.4/Legacy Vania Pack - Village - Update 0.4/Social/All-02.aseprite.meta" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Map/Legacy Vania Pack - Village - Update 0.4/Legacy Vania Pack - Village - Update 0.4/Social/All-02.aseprite.meta" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/Map/Legacy Vania Pack - Village - Update 0.4/Legacy Vania Pack - Village - Update 0.4/Social/Igreja.aseprite.meta" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Map/Legacy Vania Pack - Village - Update 0.4/Legacy Vania Pack - Village - Update 0.4/Social/Igreja.aseprite.meta" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/Map/Legacy Vania Pack - Village - Update 0.4/Legacy Vania Pack - Village - Update 0.4/Social/Interior.aseprite.meta" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Map/Legacy Vania Pack - Village - Update 0.4/Legacy Vania Pack - Village - Update 0.4/Social/Interior.aseprite.meta" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/Map/Legacy Vania Pack - Village - Update 0.4/Legacy Vania Pack - Village - Update 0.4/Social/Village.aseprite.meta" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Map/Legacy Vania Pack - Village - Update 0.4/Legacy Vania Pack - Village - Update 0.4/Social/Village.aseprite.meta" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/Script/Anya/AnyaMv.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Script/Anya/AnyaMv.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/Script/Anya/NewBehaviourScript.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Script/Anya/NewBehaviourScript.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Packages/manifest.json" beforeDir="false" afterPath="$PROJECT_DIR$/Packages/manifest.json" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Packages/packages-lock.json" beforeDir="false" afterPath="$PROJECT_DIR$/Packages/packages-lock.json" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/ProjectSettings/ProjectVersion.txt" beforeDir="false" afterPath="$PROJECT_DIR$/ProjectSettings/ProjectVersion.txt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/ProjectSettings/SceneTemplateSettings.json" beforeDir="false" afterPath="$PROJECT_DIR$/ProjectSettings/SceneTemplateSettings.json" afterDir="false" />
+    <list default="true" id="bf5d8384-5e15-4d65-90fd-8ae4e3b63bb8" name="Changes" comment="iventory">
+      <change beforePath="$PROJECT_DIR$/Assets/Scenes/SampleScene.unity" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Scenes/SampleScene.unity" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/prefab/Item Slot.prefab" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/prefab/Item Slot.prefab.meta" beforeDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -40,6 +30,7 @@
   }
 }</component>
   <component name="HighlightingSettingsPerFile">
+    <setting file="mock://E:/projet/Assets/Map/Legacy Vania Pack - Village - Update 0.4/Legacy Vania Pack - Village - Update 0.4/Social/All-01.aseprite.meta" root0="SKIP_HIGHLIGHTING" />
     <setting file="file://$PROJECT_DIR$/Assets/Script/Anya/AnyaAtk.cs" root0="FORCE_HIGHLIGHTING" />
     <setting file="file://$PROJECT_DIR$/Assets/Script/Anya/AnyaHealth.cs" root0="FORCE_HIGHLIGHTING" />
     <setting file="file://$PROJECT_DIR$/Assets/Script/Anya/AnyaMv.cs" root0="FORCE_HIGHLIGHTING" />
@@ -93,7 +84,7 @@
       <option name="presentableId" value="Default" />
       <updated>1742555266366</updated>
       <workItem from="1742555267563" duration="235000" />
-      <workItem from="1742982570671" duration="679000" />
+      <workItem from="1742982570671" duration="1311000" />
     </task>
     <task id="LOCAL-00001" summary="kkk">
       <option name="closed" value="true" />
@@ -103,7 +94,15 @@
       <option name="project" value="LOCAL" />
       <updated>1742555459964</updated>
     </task>
-    <option name="localTasksCounter" value="2" />
+    <task id="LOCAL-00002" summary="iventory">
+      <option name="closed" value="true" />
+      <created>1742983316228</created>
+      <option name="number" value="00002" />
+      <option name="presentableId" value="LOCAL-00002" />
+      <option name="project" value="LOCAL" />
+      <updated>1742983316228</updated>
+    </task>
+    <option name="localTasksCounter" value="3" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -117,6 +116,7 @@
   <component name="VcsManagerConfiguration">
     <option name="CLEAR_INITIAL_COMMIT_MESSAGE" value="true" />
     <MESSAGE value="kkk" />
-    <option name="LAST_COMMIT_MESSAGE" value="kkk" />
+    <MESSAGE value="iventory" />
+    <option name="LAST_COMMIT_MESSAGE" value="iventory" />
   </component>
 </project>
