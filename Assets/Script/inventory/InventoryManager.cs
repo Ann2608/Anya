@@ -1,65 +1,115 @@
 ﻿using UnityEngine;
+using UnityEngine.UIElements;
 
 public class InventoryManager : MonoBehaviour
 {
     public GameObject InventoryMenu;
     private bool menuActived = false;
-    public Itemslot[] itemslot;
-    public ItemSo[] itemSOs;
+    public Itemslot[] itemSlots;
+
+    private int selectedIndex = 0; // Ô đầu tiên mặc định được chọn
+    private int columns = 5; // Số cột của inventory
+    private int rows = 5; // Số hàng của inventory
 
     void Update()
     {
-        if (Input.GetKeyDown(KeyCode.I)) // Nhấn phím "I"
+        if (Input.GetKeyDown(KeyCode.I)) // Bật/tắt menu inventory
         {
-            menuActived = !menuActived; // Đảo trạng thái
-            InventoryMenu.SetActive(menuActived); // Hiển thị hoặc ẩn menu
+            menuActived = !menuActived;
+            InventoryMenu.SetActive(menuActived);
+        }
+
+        if (menuActived)
+        {
+            HandleKeyboardInput();
         }
     }
 
-    public void UseItem(string itemName)
+    private void HandleKeyboardInput()
     {
-        foreach (var item in itemSOs)
+        int previousIndex = selectedIndex;
+
+        if (Input.GetKeyDown(KeyCode.A)) // Sang trái
         {
-            if (item.itemName == itemName)
-            {
-                item.UseItem();
-            }
+            if (selectedIndex % columns != 0) // Kiểm tra có ở cột đầu tiên không
+                selectedIndex--;
+        }
+        else if (Input.GetKeyDown(KeyCode.D)) // Sang phải
+        {
+            if ((selectedIndex + 1) % columns != 0) // Kiểm tra có ở cột cuối không
+                selectedIndex++;
+        }
+        else if (Input.GetKeyDown(KeyCode.W)) // Lên trên
+        {
+            if (selectedIndex - columns >= 0)
+                selectedIndex -= columns;
+        }
+        else if (Input.GetKeyDown(KeyCode.S)) // Xuống dưới
+        {
+            if (selectedIndex + columns < itemSlots.Length)
+                selectedIndex += columns;
+        }
+
+        if (previousIndex != selectedIndex)
+        {
+            DeselectAllSlots();
+            SelectSlot(selectedIndex);
         }
     }
 
-    public int AddItem(string itemName, int quantity, Sprite sprite, string itemDescription)
+    private void SelectSlot(int index)
     {
-        Debug.Log($"itemName = {itemName}, quantity = {quantity}, Sprite = {sprite}");
-
-        for (int i = 0; i < itemslot.Length; i++)
-        {
-            if (!itemslot[i].isFull || itemslot[i].quantity == 0)
-            {
-                // Nếu slot trống hoàn toàn, cập nhật thông tin
-                if (itemslot[i].quantity == 0)
-                {
-                    itemslot[i].itemName = itemName;
-                    itemslot[i].sprite = sprite;
-                    itemslot[i].itemDescription = itemDescription;
-                }
-
-                int leftOverItems = itemslot[i].AddItem(itemName, quantity, sprite, itemDescription);
-                if (leftOverItems > 0)
-                {
-                    return AddItem(itemName, leftOverItems, sprite, itemDescription);
-                }
-                return 0;
-            }
-        }
-        return quantity;
+        itemSlots[index].selectedShader.SetActive(true);
+        itemSlots[index].SelectedItem = true;
     }
 
-    public void DeSelectAllSlots()
+    public void DeselectAllSlots()
     {
-        foreach (var slot in itemslot)
+        foreach (var slot in itemSlots)
         {
             slot.selectedShader.SetActive(false);
             slot.SelectedItem = false;
         }
+    }
+
+    public void UseItem()
+    {
+        if (itemSlots[selectedIndex].SelectedItem)
+        {
+            itemSlots[selectedIndex].UseSelectedItem();
+        }
+    }
+
+    public void RemoveItem(ItemSo itemToRemove)
+    {
+        for (int i = 0; i < itemSlots.Length; i++)
+        {
+            if (itemSlots[i].itemName == itemToRemove.itemName)
+            {
+                itemSlots[i].quantity--;
+
+                if (itemSlots[i].quantity <= 0)
+                {
+                    itemSlots[i].ClearSlot();
+                }
+                else
+                {
+                    itemSlots[i].UpdateQuantityText();
+                }
+                return;
+            }
+        }
+    }
+
+    public int AddItem(ItemSo itemData, int quantity)
+    {
+        for (int i = 0; i < itemSlots.Length; i++)
+        {
+            if (!itemSlots[i].isFull || itemSlots[i].itemName == itemData.itemName)
+            {
+                return itemSlots[i].AddItem(itemData.itemName, quantity, itemData.itemIcon, "Mô tả item");
+            }
+        }
+        return quantity; // Trả lại số lượng item không thể thêm
     }
 }

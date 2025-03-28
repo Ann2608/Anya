@@ -1,28 +1,19 @@
-using UnityEngine;
+﻿using UnityEngine;
 
-public class item : MonoBehaviour
+public class Item : MonoBehaviour
 {
-    [SerializeField] private string itemName;
-    [SerializeField] private int quantity;
-    [SerializeField] private Sprite sprite;
-    [TextArea]
-    [SerializeField] private string itemDescription;
-
-    private InventoryManager inventoryManager;
-
-    void Start()
-    {
-        inventoryManager = GameObject.Find("IvenCanvas").GetComponent<InventoryManager>();
-    }
+    public ItemSo itemData;
+    public int quantity = 1; // Số lượng mặc định
 
     private void OnCollisionEnter2D(Collision2D collision)
     {
-        if (collision.gameObject.tag == "Player")
+        if (collision.gameObject.CompareTag("Player"))
         {
-            int leftOverItems = inventoryManager.AddItem(itemName, quantity, sprite, itemDescription);
+            InventoryManager inventoryManager = GameObject.Find("IvenCanvas").GetComponent<InventoryManager>();
+            int leftOverItems = inventoryManager.AddItem(itemData, quantity);
             if (leftOverItems <= 0)
             {
-                Destroy(gameObject);
+                Destroy(gameObject); // Xóa vật phẩm khi được nhặt hết
             }
             else
             {

@@ -5,7 +5,6 @@ using UnityEngine.EventSystems;
 
 public class Itemslot : MonoBehaviour, IPointerClickHandler
 {
-    // ============================item data ==============================
     public string itemName;
     public int quantity;
     public Sprite sprite;
@@ -16,19 +15,14 @@ public class Itemslot : MonoBehaviour, IPointerClickHandler
     [SerializeField]
     private int maxNumberOfItems;
 
-    // ==================== item slot =========================================
     [SerializeField]
-    private TMP_Text quantityText;
+    public TMP_Text quantityText;
     [SerializeField]
-    private Image Itemimage;
+    public Image Itemimage;
     public GameObject selectedShader;
     public bool SelectedItem;
 
     private InventoryManager inventoryManager;
-    // ============== Item Description Slot ===================
-    public Image itemDescriptionImage;
-    public TMP_Text itemDescriptionNameText;
-    public TMP_Text itemDescriptionText;
 
     private void Start()
     {
@@ -37,33 +31,29 @@ public class Itemslot : MonoBehaviour, IPointerClickHandler
 
     public int AddItem(string itemName, int quantity, Sprite sprite, string itemDescription)
     {
-        if (isFull)
-        {
-            return quantity;
-        }
+        if (isFull) return quantity; // Nếu ô đầy, trả lại số item dư
 
         this.itemName = itemName;
-        this.sprite = sprite;
-        this.itemDescription = itemDescription;
         this.quantity += quantity;
-
-        // Cập nhật UI
-        Itemimage.sprite = sprite;
-        Itemimage.enabled = true;
 
         if (this.quantity >= maxNumberOfItems)
         {
-            isFull = true;
             int extraItems = this.quantity - maxNumberOfItems;
             this.quantity = maxNumberOfItems;
-            quantityText.text = maxNumberOfItems.ToString();
-            quantityText.enabled = true;
+            isFull = true;
+            UpdateUI();
             return extraItems;
         }
 
-        quantityText.text = this.quantity.ToString();
-        quantityText.enabled = true;
+        UpdateUI();
         return 0;
+    }
+
+    private void UpdateUI()
+    {
+        quantityText.text = quantity > 0 ? quantity.ToString() : "";
+        quantityText.enabled = quantity > 0;
+        Itemimage.sprite = quantity > 0 ? sprite : EmptySprite;
     }
 
     public void OnPointerClick(PointerEventData eventData)
@@ -72,34 +62,38 @@ public class Itemslot : MonoBehaviour, IPointerClickHandler
         {
             OnLeftClick();
         }
-        else if (eventData.button == PointerEventData.InputButton.Right)
-        {
-            OnRightClick();
-        }
     }
 
     public void OnLeftClick()
     {
-        if (SelectedItem)
-        {
-            inventoryManager.UseItem(itemName);
-        }
-
-        inventoryManager.DeSelectAllSlots();
-
-        if (selectedShader != null)
-        {
-            selectedShader.SetActive(true);
-        }
-
+        inventoryManager.DeselectAllSlots();
+        selectedShader.SetActive(true);
         SelectedItem = true;
-        itemDescriptionNameText.text = itemName;
-        itemDescriptionText.text = itemDescription;
-        itemDescriptionImage.sprite = sprite ?? EmptySprite;
     }
 
-    public void OnRightClick()
+    public void UseSelectedItem()
     {
-        // Chức năng chuột phải (nếu cần)
+        Debug.Log("Sử dụng item: " + itemName);
+        quantity--;
+
+        if (quantity <= 0)
+        {
+            itemName = null;
+            isFull = false;
+        }
+
+        UpdateUI();
+    }
+    public void ClearSlot()
+    {
+        itemName = null;
+        quantity = 0;
+        isFull = false;
+        Itemimage.sprite = EmptySprite;
+        quantityText.text = "";
+    }
+    public void UpdateQuantityText()
+    {
+        quantityText.text = quantity > 0 ? quantity.ToString() : "";
     }
 }
