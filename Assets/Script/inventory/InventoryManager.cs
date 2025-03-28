@@ -6,6 +6,7 @@ public class InventoryManager : MonoBehaviour
     public GameObject InventoryMenu;
     private bool menuActived = false;
     public Itemslot[] itemSlots;
+    public PlayerController playerController;
 
     private int selectedIndex = 0; // Ô đầu tiên mặc định được chọn
     private int columns = 5; // Số cột của inventory
@@ -15,13 +16,31 @@ public class InventoryManager : MonoBehaviour
     {
         if (Input.GetKeyDown(KeyCode.I)) // Bật/tắt menu inventory
         {
-            menuActived = !menuActived;
-            InventoryMenu.SetActive(menuActived);
+            ToggleInventory();
         }
 
         if (menuActived)
         {
             HandleKeyboardInput();
+        }
+    }
+
+    private void ToggleInventory()
+    {
+        menuActived = !menuActived;
+        InventoryMenu.SetActive(menuActived);
+        
+
+        if (menuActived)
+        {
+            Time.timeScale = 0f; // Dừng game khi mở inventory
+            playerController.enabled = false; // Tắt điều khiển nhân vật
+           
+        }
+        else
+        {
+            Time.timeScale = 1f; // Tiếp tục game khi đóng inventory
+            playerController.enabled = true; //  điều khiển nhân vật
         }
     }
 
