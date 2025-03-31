@@ -10,7 +10,7 @@ public class InventoryManager : MonoBehaviour
 
     private int selectedIndex = 0; // Ô đầu tiên mặc định được chọn
     private int columns = 5; // Số cột của inventory
-    private int rows = 5; // Số hàng của inventory
+    //private int rows = 5; // Số hàng của inventory
 
     void Update()
     {
