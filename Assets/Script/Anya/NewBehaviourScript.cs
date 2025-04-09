@@ -197,6 +197,30 @@ public class PlayerController : MonoBehaviour
     {
         Debug.Log(damage);
     }
+    #region Save and load
+
+    public void Save(ref PlayerSaveData saveData)
+    {
+        saveData.Position = transform.position;
+    }
+    public void Load(PlayerSaveData saveData)
+    {
+        transform.position = saveData.Position;
+    }
+    #endregion
+
+
+    [System.Serializable]
+    public struct PlayerSaveData
+    {
+        public Vector3 Position;
+    }
+
+
+
+
+
+    
 }
 
 public enum PlayerState

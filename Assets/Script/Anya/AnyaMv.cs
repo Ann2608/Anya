@@ -1,9 +1,7 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
-using UnityEngine.UI;
+﻿using UnityEngine;
+using static PlayerController;
 
-public class AnyaMv : MonoBehaviour
+public class AnyaMv : MonoBehaviour, IPlayerSavable
 {
     public Animator Anim;
     public Rigidbody2D rg;
@@ -11,15 +9,6 @@ public class AnyaMv : MonoBehaviour
     public float MvSpeed;
     public float JumpHigh;
     private float move;
-    //public Text WinText;
-
-    //private bool DangLeoTuong;
-    //[SerializeField] private float SpeedLeoTuong;
-
-    //[SerializeField] private Transform WallCheck;
-    //[SerializeField] private LayerMask WallLayer;
-    //[SerializeField] private AudioClip JumpSound;
-
     private bool IsFacingRight = true;
     public bool IsGround;
 
@@ -29,7 +18,7 @@ public class AnyaMv : MonoBehaviour
         Anim = GetComponent<Animator>();
     }
 
-    public void Update()
+    void Update()
     {
         Anim.SetFloat("Speed", Speed);
         Anim.SetBool("IsGround", IsGround);
@@ -40,15 +29,13 @@ public class AnyaMv : MonoBehaviour
         {
             Jump();
         }
-        //LeoTuong();
     }
 
-    void Movement(float move)       // giá trị move từ -1 đến 1
+    void Movement(float move)
     {
         rg.linearVelocity = new Vector2(MvSpeed * move, rg.linearVelocity.y);
         Speed = Mathf.Abs(MvSpeed * move);
 
-        // Kiểm tra đổi hướng
         if (IsFacingRight && move < 0 || !IsFacingRight && move > 0)
         {
             Flip();
@@ -59,27 +46,13 @@ public class AnyaMv : MonoBehaviour
     {
         rg.linearVelocity = new Vector2(rg.linearVelocity.x, JumpHigh);
         Anim.SetBool("IsJumping", true);
-        //SoundManager.instance.PlaySound(JumpSound);
     }
+
     public void JumpOff()
     {
         Anim.SetBool("IsJumping", false);
     }
 
-
-    //private bool IsLeoTuong()
-    //{
-    //    return Physics2D.OverlapCircle(WallCheck.position, 0.2f, WallLayer);
-    //}
-
-    //private void LeoTuong()
-    //{
-    //    if (IsLeoTuong() && !IsGround && move != 0f)
-    //    {
-    //        DangLeoTuong = true;
-    //        rg.velocity = new Vector2(rg.velocity.x, Mathf.Clamp(rg.velocity.y, -SpeedLeoTuong, float.MaxValue));
-    //    }
-    //}
     void Flip()
     {
         IsFacingRight = !IsFacingRight;
@@ -87,6 +60,7 @@ public class AnyaMv : MonoBehaviour
         X.x *= -1;
         transform.localScale = X;
     }
+
     private void OnCollisionStay2D(Collision2D collision)
     {
         IsGround = true;
@@ -96,17 +70,20 @@ public class AnyaMv : MonoBehaviour
     {
         IsGround = false;
     }
+
     public bool CanAtk()
     {
         return move == 0 && IsGround == true;
     }
-    //private void OnTriggerEnter2D(Collider2D collision)
 
-    //{
-    //    if (collision.CompareTag("Win"))
-    //    {
-    //        WinText.gameObject.SetActive(true);
-    //        Time.timeScale = 0;
-    //    }
-    //}
+    // --- Save / Load ---
+    public void Save(ref PlayerSaveData data)
+    {
+        data.Position = transform.position;
+    }
+
+    public void Load(PlayerSaveData data)
+    {
+        transform.position = data.Position;
+    }
 }
