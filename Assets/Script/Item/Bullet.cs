@@ -38,8 +38,14 @@ public class Bullet : MonoBehaviour
             enemyHealth.TakeDmg((int)DmgBullet);
             gameObject.SetActive(false);
         }
-        
-
+        if (collision.CompareTag("Ground"))
+        {
+            gameObject.SetActive(false);
+        }
+        if (collision.CompareTag("Item"))
+        {
+            gameObject.SetActive(false);
+        }
     }
     public void SetDirection(float direction)
     {

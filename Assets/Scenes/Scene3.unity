@@ -134,7 +134,7 @@ GameObject:
   - component: {fileID: 204017154}
   - component: {fileID: 204017153}
   m_Layer: 0
-  m_Name: Ruong
+  m_Name: Cottruyen2
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -47575,7 +47575,6 @@ GameObject:
   - component: {fileID: 1164001376}
   - component: {fileID: 1164001375}
   - component: {fileID: 1164001374}
-  - component: {fileID: 1164001373}
   - component: {fileID: 1164001372}
   m_Layer: 3
   m_Name: Anya
@@ -47599,30 +47598,6 @@ MonoBehaviour:
   MaxHealth: 10
   Immortal: 1
   ChangeColorImmortal: 2
---- !u!114 &1164001373
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1164001371}
-  m_Enabled: 0
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: d8867f4bde1107a428f31875db0031d1, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  playerState: 0
-  speedMove: 5
-  isCrouch: 0
-  isGround: 1
-  jumpForce: 8.5
-  isShoot: 0
-  bulletPrefab: {fileID: 0}
-  spawnPoint: {fileID: 766149643}
-  forceBullet: 2
-  isDeath: 0
-  health: 0
-  healthMax: 0
 --- !u!114 &1164001374
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -47648,12 +47623,14 @@ MonoBehaviour:
   - {fileID: 0}
   - {fileID: 0}
   - {fileID: 0}
-  AttackPoint: {fileID: 483283314}
-  Range: 2
-  AtkDmg: 2
+  SwordPoint: {fileID: 0}
+  SlashEffect: {fileID: 0}
   Enemylayer:
     serializedVersion: 2
     m_Bits: 64
+  AttackPoint: {fileID: 483283314}
+  Range: 2
+  AtkDmg: 2
 --- !u!114 &1164001375
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -47668,6 +47645,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   Anim: {fileID: 1164001376}
   rg: {fileID: 1164001377}
+  SpeedFX: {fileID: 0}
   MvSpeed: 7
   JumpHigh: 8
   IsGround: 1
