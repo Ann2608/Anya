@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class GirlHealth : MonoBehaviour
+public class AnyaHealth : MonoBehaviour
 {
     [Header("Health")]
     public int MaxHealth;

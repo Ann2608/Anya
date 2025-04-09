@@ -8,23 +8,30 @@ public class SoldierShieldIdle : MonoBehaviour
     [Header("Anim")]
     [SerializeField] private Animator Anim;
 
-    private Vector3 initScale;
+    [Header("Flip")]
+    private SpriteRenderer Sprite;
+    public float flipTime = 5f; // Thời gian giữa mỗi lần flip (giây)
+    private float timer;
+    private bool facingRight = true;
 
-    private void Awake()
+    void Start()
     {
-        initScale = Enemy.localScale;
+        timer = flipTime;
     }
 
-    //private void OnDisable()
-    //{
-    //    Anim.SetBool("Moving", false);
-    //}
-
-    private void Update()
+    void Update()
     {
-        // Đặt trạng thái không di chuyển
-        //Anim.SetBool("Moving", false);
-        // Giữ nguyên vị trí và hướng ban đầu của Enemy
-        Enemy.localScale = initScale;
+        timer -= Time.deltaTime;
+        if (timer <= 0)
+        {
+            // Flip hướng
+            facingRight = !facingRight;
+            Vector3 scale = transform.localScale;
+            scale.x = facingRight ? Mathf.Abs(scale.x) : -Mathf.Abs(scale.x);
+            transform.localScale = scale;
+
+            timer = flipTime; // Reset đồng hồ
+        }
     }
+
 }
