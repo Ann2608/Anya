@@ -46,7 +46,7 @@ public class AnyaMv : MonoBehaviour
         NoteUI.SetActive(false);
     }
 
-    void Startspeedboost(float mutiplyer)       // mutiplyer là giá trị của Speedboost tức là giá trị tăng tốc
+    public void  Startspeedboost(float mutiplyer)       // mutiplyer là giá trị của Speedboost tức là giá trị tăng tốc
     {
         StartCoroutine(SpeedboostCouroutine(mutiplyer));
     }
