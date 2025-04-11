@@ -71,7 +71,7 @@ public class SoldierShieldAttack : MonoBehaviour
             float direction = Mathf.Sign(transform.localScale.x); // 1 nếu quay phải, -1 nếu quay trái
 
             // Bắn thẳng theo trục ngang (Vector2.right là trục x)
-            bulletRb.velocity = new Vector2(direction * bulletSpeed, 0f); // Bắn thẳng, không có thành phần y
+            bulletRb.linearVelocity = new Vector2(direction * bulletSpeed, 0f); // Bắn thẳng, không có thành phần y
 
             Vector3 bulletScale = bullet.transform.localScale;
             bulletScale.x = Mathf.Abs(bulletScale.x) * direction; // Lật ngang dựa trên hướng

@@ -1,0 +1,17 @@
+Index: Assets/Script/Save and load/GameManager.cs
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+>using UnityEngine;\r\n\r\npublic class GameManager : MonoBehaviour\r\n{\r\n    public static GameManager Instance { get; private set; }\r\n\r\n    public IPlayerSavable Player { get; private set; }\r\n\r\n    private void Awake()\r\n    {\r\n        if (Instance == null)\r\n        {\r\n            Instance = this;\r\n            DontDestroyOnLoad(gameObject);\r\n\r\n            IPlayerSavable foundPlayer = FindObjectOfType<AnyaMv>();\r\n            if (foundPlayer != null)\r\n            {\r\n                Player = foundPlayer;\r\n                Debug.Log(\"Player đã được gán: \" + Player);\r\n            }\r\n            else\r\n            {\r\n                Debug.LogWarning(\"Không tìm thấy Player trong scene.\");\r\n            }\r\n        }\r\n        else\r\n        {\r\n            Destroy(gameObject);\r\n        }\r\n    }\r\n\r\n    private void Update()\r\n    {\r\n        if (Input.GetKeyDown(KeyCode.Alpha0)) // Save\r\n        {\r\n            SaveSystem.Save();\r\n        }\r\n\r\n        if (Input.GetKeyDown(KeyCode.Alpha1)) // Load\r\n        {\r\n            SaveSystem.Load();\r\n        }\r\n    }\r\n}\r\n
+===================================================================
+diff --git a/Assets/Script/Save and load/GameManager.cs b/Assets/Script/Save and load/GameManager.cs
+--- a/Assets/Script/Save and load/GameManager.cs	(revision b667d00fee2265f07b4afef09d03f838f61ff3dd)
++++ b/Assets/Script/Save and load/GameManager.cs	(date 1744195224324)
+@@ -13,7 +13,7 @@
+             Instance = this;
+             DontDestroyOnLoad(gameObject);
+ 
+-            IPlayerSavable foundPlayer = FindObjectOfType<AnyaMv>();
++            //IPlayerSavable foundPlayer = FindObjectOfType<AnyaMv>();
+             if (foundPlayer != null)
+             {
+                 Player = foundPlayer;

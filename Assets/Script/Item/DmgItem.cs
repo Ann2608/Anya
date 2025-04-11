@@ -1,28 +1,38 @@
 ﻿using System;
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
+using static SpeedItem;
 
 public class DmgItem : MonoBehaviour
 {
-    public static event Action<int> OnDmgChange;        // khai bao su kien
-    public int DmgBoost;
+    public static event Action<int> OnDmgChange;
 
-    public int ID;
-    public string Name;
-    public virtual void PickUp()
+    [SerializeField]
+    private string itemName;
+    [SerializeField]
+    private int quantity = 1;
+    [SerializeField]
+    private Sprite sprite;
+    [TextArea]
+    [SerializeField]
+    private string itemDescription;
+    [SerializeField]
+    private int dmgBoost;
+    [SerializeField]
+    private ItemType itemType = ItemType.DmgItem;
+
+    private InventoryManager inventoryManager;
+
+    private void Start()
     {
-        Sprite ItemIcon = null;
-        SpriteRenderer sr = GetComponent<SpriteRenderer>();
-        if (sr != null)
+        inventoryManager = GameObject.Find("IvenCanvas").GetComponent<InventoryManager>();
+        if (sprite == null)
         {
-            ItemIcon = sr.sprite; // Lấy sprite từ SpriteRenderer
+            SpriteRenderer sr = GetComponent<SpriteRenderer>();
+            if (sr != null)
+            {
+                sprite = sr.sprite;
+            }
         }
-        if (ItemPopup.Instance != null)
-        {
-            ItemPopup.Instance.ShowItem(Name, ItemIcon);
-        }
-
     }
 
     private void OnTriggerEnter2D(Collider2D collision)
@@ -30,17 +40,28 @@ public class DmgItem : MonoBehaviour
         if (collision.CompareTag("Player"))
         {
             AnyaAtk anyaAtk = collision.GetComponent<AnyaAtk>();
-            if(anyaAtk != null)
+            if (anyaAtk != null)
             {
-                anyaAtk.AttackIncrease((int)DmgBoost);
+                anyaAtk.AttackIncrease(dmgBoost);
             }
             Collect();
         }
     }
+
     public void Collect()
     {
-        PickUp(); // Gọi PickUp để hiển thị popup
-        OnDmgChange?.Invoke((int)DmgBoost);
+        inventoryManager.AddItem(itemName, quantity, sprite, itemDescription, itemType);
+        OnDmgChange?.Invoke(dmgBoost);
+        PickUp();
         Destroy(gameObject);
+    }
+
+    public virtual void PickUp()
+    {
+        Sprite itemIcon = sprite;
+        if (ItemPopup.Instance != null)
+        {
+            ItemPopup.Instance.ShowItem(itemName, itemIcon);
+        }
     }
 }
