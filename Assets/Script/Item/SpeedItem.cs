@@ -1,28 +1,36 @@
 ﻿using System;
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.UI;
 
 public class SpeedItem : MonoBehaviour
 {
-    public static event Action<float> OnSpeedChange;        // khai bao su kien
-    public float SpeedBoost;
+    public static event Action<float> OnSpeedChange;
 
-    public int ID;
-    public string Name;
+    [SerializeField]
+    private string itemName;
+    [SerializeField]
+    private int quantity = 1;
+    [SerializeField]
+    private Sprite sprite;
+    [TextArea]
+    [SerializeField]
+    private string itemDescription;
+    [SerializeField]
+    private float speedBoost;
+    [SerializeField]
+    private ItemType itemType = ItemType.SpeedItem; // Thêm itemType
 
-    public virtual void PickUp()
+    private InventoryManager inventoryManager;
+
+    private void Start()
     {
-        Sprite ItemIcon = null;
-        SpriteRenderer sr = GetComponent<SpriteRenderer>();
-        if (sr != null)
+        inventoryManager = GameObject.Find("IvenCanvas").GetComponent<InventoryManager>();
+        if (sprite == null)
         {
-            ItemIcon = sr.sprite; // Lấy sprite từ SpriteRenderer
-        }
-        if(ItemPopup.Instance != null)
-        {
-            ItemPopup.Instance.ShowItem(Name, ItemIcon);
+            SpriteRenderer sr = GetComponent<SpriteRenderer>();
+            if (sr != null)
+            {
+                sprite = sr.sprite;
+            }
         }
     }
 
@@ -33,10 +41,30 @@ public class SpeedItem : MonoBehaviour
             Collect();
         }
     }
+
     public void Collect()
     {
-        PickUp(); // Gọi PickUp để hiển thị popup
-        OnSpeedChange.Invoke(SpeedBoost);
+        inventoryManager.AddItem(itemName, quantity, sprite, itemDescription, itemType); // Truyền itemType
+        OnSpeedChange?.Invoke(speedBoost);
+        if (ItemPopup.Instance != null)
+        {
+            ItemPopup.Instance.ShowItem(itemName, sprite);
+        }
         Destroy(gameObject);
+    }
+
+    public virtual void PickUp()
+    {
+        if (ItemPopup.Instance != null)
+        {
+            ItemPopup.Instance.ShowItem(itemName, sprite);
+        }
+    }
+    public enum ItemType
+    {
+        None,
+        SpeedItem,
+        SwordItem,
+        DmgItem
     }
 }

@@ -1,0 +1,198 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="AutoImportSettings">
+    <option name="autoReloadType" value="SELECTIVE" />
+  </component>
+  <component name="ChangeListManager">
+    <list default="true" id="bf5d8384-5e15-4d65-90fd-8ae4e3b63bb8" name="Changes" comment="">
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/Scenes/Scene1.unity" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Scenes/Scene1.unity" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/Script/Anya/AnyaMv.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Script/Anya/AnyaMv.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/Script/Enemy/SoldierShieldAttack.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Script/Enemy/SoldierShieldAttack.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/Script/Item/DmgItem.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Script/Item/DmgItem.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/Script/Item/SpeedItem.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Script/Item/SpeedItem.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/Script/Item/SwordItem.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Script/Item/SwordItem.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/Script/inventory/InventoryManager.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Script/inventory/InventoryManager.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/Script/inventory/Itemslot.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Script/inventory/Itemslot.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/Script/inventory/item.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Script/inventory/item.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/prefab.meta" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/prefab.meta" afterDir="false" />
+    </list>
+    <option name="SHOW_DIALOG" value="false" />
+    <option name="HIGHLIGHT_CONFLICTS" value="true" />
+    <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
+    <option name="LAST_RESOLUTION" value="IGNORE" />
+  </component>
+  <component name="Git.Settings">
+    <option name="RECENT_BRANCH_BY_REPOSITORY">
+      <map>
+        <entry key="$PROJECT_DIR$" value="main" />
+      </map>
+    </option>
+    <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
+  </component>
+  <component name="GitHubPullRequestSearchHistory">{
+  &quot;lastFilter&quot;: {
+    &quot;state&quot;: &quot;OPEN&quot;,
+    &quot;assignee&quot;: &quot;HiuPham245&quot;
+  }
+}</component>
+  <component name="GithubPullRequestsUISettings">{
+  &quot;selectedUrlAndAccountId&quot;: {
+    &quot;url&quot;: &quot;https://github.com/Ann2608/Anya&quot;,
+    &quot;accountId&quot;: &quot;b0ee0331-eefe-4fc5-9e1c-32532fa7281d&quot;
+  }
+}</component>
+  <component name="HighlightingSettingsPerFile">
+    <setting file="file://$PROJECT_DIR$/Assets/Script/Anya/AnyaAtk.cs" root0="FORCE_HIGHLIGHTING" />
+    <setting file="file://$PROJECT_DIR$/Assets/Script/Anya/AnyaHealth.cs" root0="FORCE_HIGHLIGHTING" />
+    <setting file="file://$PROJECT_DIR$/Assets/Script/Anya/AnyaMv.cs" root0="FORCE_HIGHLIGHTING" />
+    <setting file="file://$PROJECT_DIR$/Assets/Script/Enemy/SoldierShieldAttack.cs" root0="SKIP_HIGHLIGHTING" />
+    <setting file="file://$PROJECT_DIR$/Assets/Script/inventory/InventoryManager.cs" root0="FORCE_HIGHLIGHTING" />
+    <setting file="file://$PROJECT_DIR$/Assets/Script/inventory/Itemslot.cs" root0="FORCE_HIGHLIGHTING" />
+    <setting file="file://$PROJECT_DIR$/Assets/Script/inventory/item.cs" root0="SKIP_HIGHLIGHTING" />
+  </component>
+  <component name="MetaFilesCheckinStateConfiguration" checkMetaFiles="true" />
+  <component name="ProjectColorInfo">{
+  &quot;associatedIndex&quot;: 2
+}</component>
+  <component name="ProjectId" id="2uckUbGzZNNn0KM313krGC9D5fZ" />
+  <component name="ProjectLevelVcsManager" settingsEditedManually="true" />
+  <component name="ProjectViewState">
+    <option name="hideEmptyMiddlePackages" value="true" />
+    <option name="showLibraryContents" value="true" />
+  </component>
+  <component name="PropertiesComponent"><![CDATA[{
+  "keyToString": {
+    "Attach to Unity Editor.Attach to Unity Editor.executor": "Debug",
+    "RunOnceActivity.ShowReadmeOnStart": "true",
+    "RunOnceActivity.git.unshallow": "true",
+    "git-widget-placeholder": "fixing",
+    "node.js.detected.package.eslint": "true",
+    "node.js.detected.package.tslint": "true",
+    "node.js.selected.package.eslint": "(autodetect)",
+    "node.js.selected.package.tslint": "(autodetect)",
+    "nodejs_package_manager_path": "npm",
+    "vue.rearranger.settings.migration": "true"
+  }
+}]]></component>
+  <component name="RunManager">
+    <configuration name="Attach to Unity Editor" type="UNITY_DEBUG_RUN_CONFIGURATION" factoryName="Unity Debug" show_console_on_std_err="false" show_console_on_std_out="false" port="50000" address="localhost">
+      <option name="allowRunningInParallel" value="false" />
+      <option name="listenPortForConnections" value="false" />
+      <option name="pid" />
+      <option name="projectPathOnTarget" />
+      <option name="runtimes">
+        <list />
+      </option>
+      <option name="selectedOptions">
+        <list />
+      </option>
+      <method v="2" />
+    </configuration>
+  </component>
+  <component name="SpellCheckerSettings" RuntimeDictionaries="0" Folders="0" CustomDictionaries="0" DefaultDictionary="application-level" UseSingleDictionary="true" transferred="true" />
+  <component name="TaskManager">
+    <task active="true" id="Default" summary="Default task">
+      <changelist id="bf5d8384-5e15-4d65-90fd-8ae4e3b63bb8" name="Changes" comment="" />
+      <created>1742555266366</created>
+      <option name="number" value="Default" />
+      <option name="presentableId" value="Default" />
+      <updated>1742555266366</updated>
+      <workItem from="1742555267563" duration="235000" />
+      <workItem from="1742982570671" duration="4270000" />
+      <workItem from="1743590002322" duration="437000" />
+      <workItem from="1744197376989" duration="90000" />
+      <workItem from="1744364555457" duration="14000" />
+      <workItem from="1744364714542" duration="2502000" />
+    </task>
+    <task id="LOCAL-00001" summary="kkk">
+      <option name="closed" value="true" />
+      <created>1742555459964</created>
+      <option name="number" value="00001" />
+      <option name="presentableId" value="LOCAL-00001" />
+      <option name="project" value="LOCAL" />
+      <updated>1742555459964</updated>
+    </task>
+    <task id="LOCAL-00002" summary="iventory">
+      <option name="closed" value="true" />
+      <created>1742983316228</created>
+      <option name="number" value="00002" />
+      <option name="presentableId" value="LOCAL-00002" />
+      <option name="project" value="LOCAL" />
+      <updated>1742983316228</updated>
+    </task>
+    <task id="LOCAL-00003" summary="asas">
+      <option name="closed" value="true" />
+      <created>1742984872837</created>
+      <option name="number" value="00003" />
+      <option name="presentableId" value="LOCAL-00003" />
+      <option name="project" value="LOCAL" />
+      <updated>1742984872837</updated>
+    </task>
+    <task id="LOCAL-00004" summary="neee">
+      <option name="closed" value="true" />
+      <created>1742987567676</created>
+      <option name="number" value="00004" />
+      <option name="presentableId" value="LOCAL-00004" />
+      <option name="project" value="LOCAL" />
+      <updated>1742987567676</updated>
+    </task>
+    <task id="LOCAL-00005" summary="sua code lan 2">
+      <option name="closed" value="true" />
+      <created>1743157812554</created>
+      <option name="number" value="00005" />
+      <option name="presentableId" value="LOCAL-00005" />
+      <option name="project" value="LOCAL" />
+      <updated>1743157812554</updated>
+    </task>
+    <task id="LOCAL-00006" summary="aaaaa">
+      <option name="closed" value="true" />
+      <created>1743158938140</created>
+      <option name="number" value="00006" />
+      <option name="presentableId" value="LOCAL-00006" />
+      <option name="project" value="LOCAL" />
+      <updated>1743158938140</updated>
+    </task>
+    <task id="LOCAL-00007" summary="dang ki dang nhap json">
+      <option name="closed" value="true" />
+      <created>1743590059618</created>
+      <option name="number" value="00007" />
+      <option name="presentableId" value="LOCAL-00007" />
+      <option name="project" value="LOCAL" />
+      <updated>1743590059618</updated>
+    </task>
+    <option name="localTasksCounter" value="8" />
+    <servers />
+  </component>
+  <component name="TypeScriptGeneratedFilesManager">
+    <option name="version" value="3" />
+  </component>
+  <component name="UnityCheckinConfiguration" checkUnsavedScenes="true" />
+  <component name="UnityProjectConfiguration" hasMinimizedUI="false" />
+  <component name="UnityProjectDiscoverer">
+    <option name="unityProjectFolder" value="true" />
+  </component>
+  <component name="Vcs.Log.Tabs.Properties">
+    <option name="TAB_STATES">
+      <map>
+        <entry key="MAIN">
+          <value>
+            <State />
+          </value>
+        </entry>
+      </map>
+    </option>
+  </component>
+  <component name="VcsManagerConfiguration">
+    <option name="CLEAR_INITIAL_COMMIT_MESSAGE" value="true" />
+    <MESSAGE value="kkk" />
+    <MESSAGE value="iventory" />
+    <MESSAGE value="asas" />
+    <MESSAGE value="neee" />
+    <MESSAGE value="sua code lan 2" />
+    <MESSAGE value="aaaaa" />
+    <MESSAGE value="ll" />
+    <MESSAGE value="dang ki dang nhap json" />
+    <option name="LAST_COMMIT_MESSAGE" value="dang ki dang nhap json" />
+  </component>
+</project>

@@ -1,26 +1,32 @@
-﻿using System;
-using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
-using UnityEngine.UI;
+﻿using UnityEngine;
+using static SpeedItem;
 
 public class SwordItem : MonoBehaviour
 {
+    [SerializeField]
+    private string itemName;
+    [SerializeField]
+    private int quantity = 1;
+    [SerializeField]
+    private Sprite sprite;
+    [TextArea]
+    [SerializeField]
+    private string itemDescription;
+    [SerializeField]
+    private ItemType itemType = ItemType.SwordItem;
 
-    public int ID;
-    public string Name;
+    private InventoryManager inventoryManager;
 
-    public virtual void PickUp()
+    private void Start()
     {
-        Sprite ItemIcon = null;
-        SpriteRenderer sr = GetComponent<SpriteRenderer>();
-        if (sr != null)
+        inventoryManager = GameObject.Find("IvenCanvas").GetComponent<InventoryManager>();
+        if (sprite == null)
         {
-            ItemIcon = sr.sprite; // Lấy sprite từ SpriteRenderer
-        }
-        if (ItemPopup.Instance != null)
-        {
-            ItemPopup.Instance.ShowItem(Name, ItemIcon);
+            SpriteRenderer sr = GetComponent<SpriteRenderer>();
+            if (sr != null)
+            {
+                sprite = sr.sprite;
+            }
         }
     }
 
@@ -31,16 +37,25 @@ public class SwordItem : MonoBehaviour
             AnyaAtk player = collision.GetComponent<AnyaAtk>();
             if (player != null)
             {
-                player.EquipSword(); // Gọi hàm trang bị kiếm
-                //Destroy(gameObject); // Hủy vật phẩm sau khi nhặt
+                player.EquipSword();
             }
             Collect();
         }
     }
+
     public void Collect()
     {
-        PickUp(); // Gọi PickUp để hiển thị popup
-        //OnSpeedChange.Invoke(SpeedBoost);
+        inventoryManager.AddItem(itemName, quantity, sprite, itemDescription, itemType);
+        PickUp();
         Destroy(gameObject);
+    }
+
+    public virtual void PickUp()
+    {
+        Sprite itemIcon = sprite;
+        if (ItemPopup.Instance != null)
+        {
+            ItemPopup.Instance.ShowItem(itemName, itemIcon);
+        }
     }
 }

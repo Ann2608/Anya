@@ -1,0 +1,1534 @@
+Index: Assets/Script/Anya/AnyaMv.cs
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+>using System.Collections;\r\nusing System.Collections.Generic;\r\nusing UnityEngine;\r\nusing UnityEngine.UI;\r\nusing UnityEngine.UIElements;\r\n\r\npublic class AnyaMv : MonoBehaviour\r\n{\r\n    public Animator Anim;\r\n    public Rigidbody2D rg;\r\n    public BoxCollider2D Box;\r\n    public ParticleSystem SpeedFX;      // ParticleSystem: hiệu ứng hạt\r\n\r\n    private float Speed = 0;\r\n\r\n    [Header(\"Speed\")]\r\n    public float MvSpeed;\r\n    private float Speedboost = 1f;\r\n\r\n    [Header(\"Interact\")]\r\n    [SerializeField] private GameObject NoteUI;\r\n    [SerializeField] private Text NoteText;\r\n    private bool CanInteract = false;       // kiểm tra xem người chơi có ở gần không\r\n    private string NoteContent;\r\n\r\n    public float JumpHigh;\r\n    private float move;\r\n    //public Text WinText;\r\n\r\n    //private bool DangLeoTuong;\r\n    //[SerializeField] private float SpeedLeoTuong;\r\n\r\n    //[SerializeField] private Transform WallCheck;\r\n    //[SerializeField] private LayerMask WallLayer;\r\n    //[SerializeField] private AudioClip JumpSound;\r\n\r\n    private bool IsFacingRight = true;\r\n    public bool IsGround;\r\n\r\n    void Start()\r\n    {\r\n        rg = GetComponent<Rigidbody2D>();\r\n        Anim = GetComponent<Animator>();\r\n        Box = GetComponent<BoxCollider2D>();\r\n        SpeedItem.OnSpeedChange += Startspeedboost;\r\n        NoteUI.SetActive(false);\r\n    }\r\n\r\n    void Startspeedboost(float mutiplyer)       // mutiplyer là giá trị của Speedboost tức là giá trị tăng tốc\r\n    {\r\n        StartCoroutine(SpeedboostCouroutine(mutiplyer));\r\n    }\r\n\r\n    private IEnumerator SpeedboostCouroutine(float mutiplyer)\r\n    {\r\n        Speedboost = mutiplyer;\r\n        SpeedFX.Play();\r\n        yield return new WaitForSeconds(2f);\r\n        Speedboost = 1f;\r\n        SpeedFX.Stop();\r\n    }\r\n    public void Update()\r\n    {\r\n        Anim.SetFloat(\"Speed\", Speed);\r\n        Anim.SetBool(\"IsGround\", IsGround);\r\n        move = Input.GetAxisRaw(\"Horizontal\");\r\n        Movement(move);\r\n\r\n        if (Input.GetButtonDown(\"Jump\") && IsGround)\r\n        {\r\n            Jump();\r\n        }\r\n        if (Input.GetKeyDown(KeyCode.E) && CanInteract)\r\n        {\r\n            StartCoroutine(ShowNote());\r\n        }\r\n        //LeoTuong();\r\n    }\r\n    IEnumerator ShowNote()\r\n    {\r\n        NoteText.text = NoteContent;\r\n        NoteUI.SetActive(true);\r\n        yield return new WaitForSeconds(5f);\r\n        NoteUI.SetActive(false);\r\n    }\r\n\r\n    public void SetNoteContent(string content)\r\n    {\r\n        NoteContent = content;          // nội dung của Note\r\n        CanInteract = true;\r\n    }\r\n\r\n    void Movement(float move)       // giá trị move từ -1 đến 1\r\n    {\r\n        rg.velocity = new Vector2(MvSpeed * move * Speedboost, rg.velocity.y);\r\n        Speed = Mathf.Abs(MvSpeed * move * Speedboost);\r\n\r\n        // Kiểm tra đổi hướng\r\n        if (IsFacingRight && move < 0 || !IsFacingRight && move > 0)\r\n        {\r\n            Flip();\r\n        }\r\n    }\r\n\r\n    void Jump()\r\n    {\r\n        rg.velocity = new Vector2(rg.velocity.x, JumpHigh);\r\n        Anim.SetBool(\"IsJumping\", true);\r\n        //SoundManager.instance.PlaySound(JumpSound);\r\n    }\r\n    public void JumpOff()\r\n    {\r\n        Anim.SetBool(\"IsJumping\", false);\r\n    }\r\n\r\n    //private bool IsLeoTuong()\r\n    //{\r\n    //    return Physics2D.OverlapCircle(WallCheck.position, 0.2f, WallLayer);\r\n    //}\r\n\r\n    //private void LeoTuong()\r\n    //{\r\n    //    if (IsLeoTuong() && !IsGround && move != 0f)\r\n    //    {\r\n    //        DangLeoTuong = true;\r\n    //        rg.velocity = new Vector2(rg.velocity.x, Mathf.Clamp(rg.velocity.y, -SpeedLeoTuong, float.MaxValue));\r\n    //    }\r\n    //}\r\n    void Flip()\r\n    {\r\n        IsFacingRight = !IsFacingRight;\r\n        Vector3 X = transform.localScale;\r\n        X.x *= -1;\r\n        transform.localScale = X;\r\n        if (SpeedFX != null)\r\n        {\r\n            Vector3 fxScale = SpeedFX.transform.localScale;\r\n            fxScale.x = Mathf.Abs(fxScale.x) * (IsFacingRight ? 1 : -1); // (IsFacingRight ? 1 : -1) xác định dấu của scale X dựa trên hướng nhân vật (dương nếu sang phải, âm nếu sang trái).\r\n            // Mathf.Abs(fxScale.x) : lấy giá trị tuyệt đối của X, không thay đổi kích thước\r\n            // dấu ? là toán tử 3 ngôi xác định true hoặc false\r\n            SpeedFX.transform.localScale = fxScale;\r\n        }\r\n    }\r\n    private void OnCollisionStay2D(Collision2D collision)\r\n    {\r\n        IsGround = true;\r\n    }\r\n\r\n    private void OnCollisionExit2D(Collision2D collision)\r\n    {\r\n        IsGround = false;\r\n    }\r\n    public bool CanAtk()\r\n    {\r\n        return move == 0 && IsGround == true;\r\n    }\r\n    //private void OnTriggerEnter2D(Collider2D collision)\r\n\r\n    //{\r\n    //    if (collision.CompareTag(\"Win\"))\r\n    //    {\r\n    //        WinText.gameObject.SetActive(true);\r\n    //        Time.timeScale = 0;\r\n    //    }\r\n    //}\r\n}\r\n
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/Assets/Script/Anya/AnyaMv.cs b/Assets/Script/Anya/AnyaMv.cs
+--- a/Assets/Script/Anya/AnyaMv.cs	(revision e0c6d93ef9e85173d91e117cd7f0a7b18eb6c03e)
++++ b/Assets/Script/Anya/AnyaMv.cs	(date 1744365308594)
+@@ -92,7 +92,7 @@
+ 
+     void Movement(float move)       // giá trị move từ -1 đến 1
+     {
+-        rg.velocity = new Vector2(MvSpeed * move * Speedboost, rg.velocity.y);
++        rg.linearVelocity = new Vector2(MvSpeed * move * Speedboost, rg.linearVelocity.y);
+         Speed = Mathf.Abs(MvSpeed * move * Speedboost);
+ 
+         // Kiểm tra đổi hướng
+@@ -104,7 +104,7 @@
+ 
+     void Jump()
+     {
+-        rg.velocity = new Vector2(rg.velocity.x, JumpHigh);
++        rg.linearVelocity = new Vector2(rg.linearVelocity.x, JumpHigh);
+         Anim.SetBool("IsJumping", true);
+         //SoundManager.instance.PlaySound(JumpSound);
+     }
+Index: .idea/workspace.xml
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+><?xml version=\"1.0\" encoding=\"UTF-8\"?>\r\n<project version=\"4\">\r\n  <component name=\"AutoImportSettings\">\r\n    <option name=\"autoReloadType\" value=\"SELECTIVE\" />\r\n  </component>\r\n  <component name=\"ChangeListManager\">\r\n    <list default=\"true\" id=\"bf5d8384-5e15-4d65-90fd-8ae4e3b63bb8\" name=\"Changes\" comment=\"iventory\">\r\n      <change beforePath=\"$PROJECT_DIR$/Assets/Scenes/SampleScene.unity\" beforeDir=\"false\" afterPath=\"$PROJECT_DIR$/Assets/Scenes/SampleScene.unity\" afterDir=\"false\" />\r\n      <change beforePath=\"$PROJECT_DIR$/Assets/prefab/Item Slot.prefab\" beforeDir=\"false\" />\r\n      <change beforePath=\"$PROJECT_DIR$/Assets/prefab/Item Slot.prefab.meta\" beforeDir=\"false\" />\r\n    </list>\r\n    <option name=\"SHOW_DIALOG\" value=\"false\" />\r\n    <option name=\"HIGHLIGHT_CONFLICTS\" value=\"true\" />\r\n    <option name=\"HIGHLIGHT_NON_ACTIVE_CHANGELIST\" value=\"false\" />\r\n    <option name=\"LAST_RESOLUTION\" value=\"IGNORE\" />\r\n  </component>\r\n  <component name=\"Git.Settings\">\r\n    <option name=\"RECENT_GIT_ROOT_PATH\" value=\"$PROJECT_DIR$\" />\r\n  </component>\r\n  <component name=\"GitHubPullRequestSearchHistory\">{\r\n  &quot;lastFilter&quot;: {\r\n    &quot;state&quot;: &quot;OPEN&quot;,\r\n    &quot;assignee&quot;: &quot;HiuPham245&quot;\r\n  }\r\n}</component>\r\n  <component name=\"GithubPullRequestsUISettings\">{\r\n  &quot;selectedUrlAndAccountId&quot;: {\r\n    &quot;url&quot;: &quot;https://github.com/Ann2608/Anya&quot;,\r\n    &quot;accountId&quot;: &quot;b0ee0331-eefe-4fc5-9e1c-32532fa7281d&quot;\r\n  }\r\n}</component>\r\n  <component name=\"HighlightingSettingsPerFile\">\r\n    <setting file=\"mock://E:/projet/Assets/Map/Legacy Vania Pack - Village - Update 0.4/Legacy Vania Pack - Village - Update 0.4/Social/All-01.aseprite.meta\" root0=\"SKIP_HIGHLIGHTING\" />\r\n    <setting file=\"file://$PROJECT_DIR$/Assets/Script/Anya/AnyaAtk.cs\" root0=\"FORCE_HIGHLIGHTING\" />\r\n    <setting file=\"file://$PROJECT_DIR$/Assets/Script/Anya/AnyaHealth.cs\" root0=\"FORCE_HIGHLIGHTING\" />\r\n    <setting file=\"file://$PROJECT_DIR$/Assets/Script/Anya/AnyaMv.cs\" root0=\"FORCE_HIGHLIGHTING\" />\r\n    <setting file=\"file://$PROJECT_DIR$/Assets/Script/inventory/InventoryManager.cs\" root0=\"SKIP_HIGHLIGHTING\" />\r\n  </component>\r\n  <component name=\"MetaFilesCheckinStateConfiguration\" checkMetaFiles=\"true\" />\r\n  <component name=\"ProjectColorInfo\">{\r\n  &quot;associatedIndex&quot;: 2\r\n}</component>\r\n  <component name=\"ProjectId\" id=\"2uckUbGzZNNn0KM313krGC9D5fZ\" />\r\n  <component name=\"ProjectLevelVcsManager\" settingsEditedManually=\"true\" />\r\n  <component name=\"ProjectViewState\">\r\n    <option name=\"hideEmptyMiddlePackages\" value=\"true\" />\r\n    <option name=\"showLibraryContents\" value=\"true\" />\r\n  </component>\r\n  <component name=\"PropertiesComponent\"><![CDATA[{\r\n  \"keyToString\": {\r\n    \"Attach to Unity Editor.Attach to Unity Editor.executor\": \"Debug\",\r\n    \"RunOnceActivity.ShowReadmeOnStart\": \"true\",\r\n    \"RunOnceActivity.git.unshallow\": \"true\",\r\n    \"git-widget-placeholder\": \"main\",\r\n    \"node.js.detected.package.eslint\": \"true\",\r\n    \"node.js.detected.package.tslint\": \"true\",\r\n    \"node.js.selected.package.eslint\": \"(autodetect)\",\r\n    \"node.js.selected.package.tslint\": \"(autodetect)\",\r\n    \"nodejs_package_manager_path\": \"npm\",\r\n    \"vue.rearranger.settings.migration\": \"true\"\r\n  }\r\n}]]></component>\r\n  <component name=\"RunManager\">\r\n    <configuration name=\"Attach to Unity Editor\" type=\"UNITY_DEBUG_RUN_CONFIGURATION\" factoryName=\"Unity Debug\" show_console_on_std_err=\"false\" show_console_on_std_out=\"false\" port=\"50000\" address=\"localhost\">\r\n      <option name=\"allowRunningInParallel\" value=\"false\" />\r\n      <option name=\"listenPortForConnections\" value=\"false\" />\r\n      <option name=\"pid\" />\r\n      <option name=\"projectPathOnTarget\" />\r\n      <option name=\"runtimes\">\r\n        <list />\r\n      </option>\r\n      <option name=\"selectedOptions\">\r\n        <list />\r\n      </option>\r\n      <method v=\"2\" />\r\n    </configuration>\r\n  </component>\r\n  <component name=\"SpellCheckerSettings\" RuntimeDictionaries=\"0\" Folders=\"0\" CustomDictionaries=\"0\" DefaultDictionary=\"application-level\" UseSingleDictionary=\"true\" transferred=\"true\" />\r\n  <component name=\"TaskManager\">\r\n    <task active=\"true\" id=\"Default\" summary=\"Default task\">\r\n      <changelist id=\"bf5d8384-5e15-4d65-90fd-8ae4e3b63bb8\" name=\"Changes\" comment=\"\" />\r\n      <created>1742555266366</created>\r\n      <option name=\"number\" value=\"Default\" />\r\n      <option name=\"presentableId\" value=\"Default\" />\r\n      <updated>1742555266366</updated>\r\n      <workItem from=\"1742555267563\" duration=\"235000\" />\r\n      <workItem from=\"1742982570671\" duration=\"1311000\" />\r\n    </task>\r\n    <task id=\"LOCAL-00001\" summary=\"kkk\">\r\n      <option name=\"closed\" value=\"true\" />\r\n      <created>1742555459964</created>\r\n      <option name=\"number\" value=\"00001\" />\r\n      <option name=\"presentableId\" value=\"LOCAL-00001\" />\r\n      <option name=\"project\" value=\"LOCAL\" />\r\n      <updated>1742555459964</updated>\r\n    </task>\r\n    <task id=\"LOCAL-00002\" summary=\"iventory\">\r\n      <option name=\"closed\" value=\"true\" />\r\n      <created>1742983316228</created>\r\n      <option name=\"number\" value=\"00002\" />\r\n      <option name=\"presentableId\" value=\"LOCAL-00002\" />\r\n      <option name=\"project\" value=\"LOCAL\" />\r\n      <updated>1742983316228</updated>\r\n    </task>\r\n    <option name=\"localTasksCounter\" value=\"3\" />\r\n    <servers />\r\n  </component>\r\n  <component name=\"TypeScriptGeneratedFilesManager\">\r\n    <option name=\"version\" value=\"3\" />\r\n  </component>\r\n  <component name=\"UnityCheckinConfiguration\" checkUnsavedScenes=\"true\" />\r\n  <component name=\"UnityProjectConfiguration\" hasMinimizedUI=\"false\" />\r\n  <component name=\"UnityProjectDiscoverer\">\r\n    <option name=\"unityProjectFolder\" value=\"true\" />\r\n  </component>\r\n  <component name=\"VcsManagerConfiguration\">\r\n    <option name=\"CLEAR_INITIAL_COMMIT_MESSAGE\" value=\"true\" />\r\n    <MESSAGE value=\"kkk\" />\r\n    <MESSAGE value=\"iventory\" />\r\n    <option name=\"LAST_COMMIT_MESSAGE\" value=\"iventory\" />\r\n  </component>\r\n</project>
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/.idea/workspace.xml b/.idea/workspace.xml
+--- a/.idea/workspace.xml	(revision e0c6d93ef9e85173d91e117cd7f0a7b18eb6c03e)
++++ b/.idea/workspace.xml	(date 1744365308602)
+@@ -4,10 +4,11 @@
+     <option name="autoReloadType" value="SELECTIVE" />
+   </component>
+   <component name="ChangeListManager">
+-    <list default="true" id="bf5d8384-5e15-4d65-90fd-8ae4e3b63bb8" name="Changes" comment="iventory">
+-      <change beforePath="$PROJECT_DIR$/Assets/Scenes/SampleScene.unity" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Scenes/SampleScene.unity" afterDir="false" />
+-      <change beforePath="$PROJECT_DIR$/Assets/prefab/Item Slot.prefab" beforeDir="false" />
+-      <change beforePath="$PROJECT_DIR$/Assets/prefab/Item Slot.prefab.meta" beforeDir="false" />
++    <list default="true" id="bf5d8384-5e15-4d65-90fd-8ae4e3b63bb8" name="Changes" comment="">
++      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
++      <change beforePath="$PROJECT_DIR$/Assets/Script/Anya/AnyaMv.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Script/Anya/AnyaMv.cs" afterDir="false" />
++      <change beforePath="$PROJECT_DIR$/Assets/Script/Enemy/SoldierShieldAttack.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Script/Enemy/SoldierShieldAttack.cs" afterDir="false" />
++      <change beforePath="$PROJECT_DIR$/Assets/prefab.meta" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/prefab.meta" afterDir="false" />
+     </list>
+     <option name="SHOW_DIALOG" value="false" />
+     <option name="HIGHLIGHT_CONFLICTS" value="true" />
+@@ -15,6 +16,11 @@
+     <option name="LAST_RESOLUTION" value="IGNORE" />
+   </component>
+   <component name="Git.Settings">
++    <option name="RECENT_BRANCH_BY_REPOSITORY">
++      <map>
++        <entry key="$PROJECT_DIR$" value="main" />
++      </map>
++    </option>
+     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
+   </component>
+   <component name="GitHubPullRequestSearchHistory">{
+@@ -30,11 +36,13 @@
+   }
+ }</component>
+   <component name="HighlightingSettingsPerFile">
+-    <setting file="mock://E:/projet/Assets/Map/Legacy Vania Pack - Village - Update 0.4/Legacy Vania Pack - Village - Update 0.4/Social/All-01.aseprite.meta" root0="SKIP_HIGHLIGHTING" />
+     <setting file="file://$PROJECT_DIR$/Assets/Script/Anya/AnyaAtk.cs" root0="FORCE_HIGHLIGHTING" />
+     <setting file="file://$PROJECT_DIR$/Assets/Script/Anya/AnyaHealth.cs" root0="FORCE_HIGHLIGHTING" />
+     <setting file="file://$PROJECT_DIR$/Assets/Script/Anya/AnyaMv.cs" root0="FORCE_HIGHLIGHTING" />
+-    <setting file="file://$PROJECT_DIR$/Assets/Script/inventory/InventoryManager.cs" root0="SKIP_HIGHLIGHTING" />
++    <setting file="file://$PROJECT_DIR$/Assets/Script/Enemy/SoldierShieldAttack.cs" root0="SKIP_HIGHLIGHTING" />
++    <setting file="file://$PROJECT_DIR$/Assets/Script/inventory/InventoryManager.cs" root0="FORCE_HIGHLIGHTING" />
++    <setting file="file://$PROJECT_DIR$/Assets/Script/inventory/Itemslot.cs" root0="SKIP_HIGHLIGHTING" />
++    <setting file="file://$PROJECT_DIR$/Assets/Script/inventory/item.cs" root0="FORCE_HIGHLIGHTING" />
+   </component>
+   <component name="MetaFilesCheckinStateConfiguration" checkMetaFiles="true" />
+   <component name="ProjectColorInfo">{
+@@ -84,7 +92,10 @@
+       <option name="presentableId" value="Default" />
+       <updated>1742555266366</updated>
+       <workItem from="1742555267563" duration="235000" />
+-      <workItem from="1742982570671" duration="1311000" />
++      <workItem from="1742982570671" duration="4270000" />
++      <workItem from="1743590002322" duration="437000" />
++      <workItem from="1744197376989" duration="90000" />
++      <workItem from="1744364555457" duration="14000" />
+     </task>
+     <task id="LOCAL-00001" summary="kkk">
+       <option name="closed" value="true" />
+@@ -102,7 +113,47 @@
+       <option name="project" value="LOCAL" />
+       <updated>1742983316228</updated>
+     </task>
+-    <option name="localTasksCounter" value="3" />
++    <task id="LOCAL-00003" summary="asas">
++      <option name="closed" value="true" />
++      <created>1742984872837</created>
++      <option name="number" value="00003" />
++      <option name="presentableId" value="LOCAL-00003" />
++      <option name="project" value="LOCAL" />
++      <updated>1742984872837</updated>
++    </task>
++    <task id="LOCAL-00004" summary="neee">
++      <option name="closed" value="true" />
++      <created>1742987567676</created>
++      <option name="number" value="00004" />
++      <option name="presentableId" value="LOCAL-00004" />
++      <option name="project" value="LOCAL" />
++      <updated>1742987567676</updated>
++    </task>
++    <task id="LOCAL-00005" summary="sua code lan 2">
++      <option name="closed" value="true" />
++      <created>1743157812554</created>
++      <option name="number" value="00005" />
++      <option name="presentableId" value="LOCAL-00005" />
++      <option name="project" value="LOCAL" />
++      <updated>1743157812554</updated>
++    </task>
++    <task id="LOCAL-00006" summary="aaaaa">
++      <option name="closed" value="true" />
++      <created>1743158938140</created>
++      <option name="number" value="00006" />
++      <option name="presentableId" value="LOCAL-00006" />
++      <option name="project" value="LOCAL" />
++      <updated>1743158938140</updated>
++    </task>
++    <task id="LOCAL-00007" summary="dang ki dang nhap json">
++      <option name="closed" value="true" />
++      <created>1743590059618</created>
++      <option name="number" value="00007" />
++      <option name="presentableId" value="LOCAL-00007" />
++      <option name="project" value="LOCAL" />
++      <updated>1743590059618</updated>
++    </task>
++    <option name="localTasksCounter" value="8" />
+     <servers />
+   </component>
+   <component name="TypeScriptGeneratedFilesManager">
+@@ -112,11 +163,28 @@
+   <component name="UnityProjectConfiguration" hasMinimizedUI="false" />
+   <component name="UnityProjectDiscoverer">
+     <option name="unityProjectFolder" value="true" />
++  </component>
++  <component name="Vcs.Log.Tabs.Properties">
++    <option name="TAB_STATES">
++      <map>
++        <entry key="MAIN">
++          <value>
++            <State />
++          </value>
++        </entry>
++      </map>
++    </option>
+   </component>
+   <component name="VcsManagerConfiguration">
+     <option name="CLEAR_INITIAL_COMMIT_MESSAGE" value="true" />
+     <MESSAGE value="kkk" />
+     <MESSAGE value="iventory" />
+-    <option name="LAST_COMMIT_MESSAGE" value="iventory" />
++    <MESSAGE value="asas" />
++    <MESSAGE value="neee" />
++    <MESSAGE value="sua code lan 2" />
++    <MESSAGE value="aaaaa" />
++    <MESSAGE value="ll" />
++    <MESSAGE value="dang ki dang nhap json" />
++    <option name="LAST_COMMIT_MESSAGE" value="dang ki dang nhap json" />
+   </component>
+ </project>
+\ No newline at end of file
+Index: Assets/Scenes/Scene1.unity
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/Assets/Scenes/Scene1.unity b/Assets/Scenes/Scene1.unity
+--- a/Assets/Scenes/Scene1.unity	(revision e0c6d93ef9e85173d91e117cd7f0a7b18eb6c03e)
++++ b/Assets/Scenes/Scene1.unity	(date 1744365308679)
+@@ -13,7 +13,7 @@
+ --- !u!104 &2
+ RenderSettings:
+   m_ObjectHideFlags: 0
+-  serializedVersion: 9
++  serializedVersion: 10
+   m_Fog: 0
+   m_FogColor: {r: 0.5, g: 0.5, b: 0.5, a: 1}
+   m_FogMode: 3
+@@ -42,8 +42,8 @@
+ --- !u!157 &3
+ LightmapSettings:
+   m_ObjectHideFlags: 0
+-  serializedVersion: 12
+-  m_GIWorkflowMode: 1
++  serializedVersion: 13
++  m_BakeOnSceneLoad: 0
+   m_GISettings:
+     serializedVersion: 2
+     m_BounceScale: 1
+@@ -66,9 +66,6 @@
+     m_LightmapParameters: {fileID: 0}
+     m_LightmapsBakeMode: 1
+     m_TextureCompression: 1
+-    m_FinalGather: 0
+-    m_FinalGatherFiltering: 1
+-    m_FinalGatherRayCount: 256
+     m_ReflectionCompression: 2
+     m_MixedBakeMode: 2
+     m_BakeBackend: 0
+@@ -179,6 +176,7 @@
+   m_PrefabAsset: {fileID: 0}
+   m_GameObject: {fileID: 20316587}
+   m_Enabled: 1
++  serializedVersion: 3
+   m_Density: 1
+   m_Material: {fileID: 0}
+   m_IncludeLayers:
+@@ -202,7 +200,8 @@
+     m_Bits: 4294967295
+   m_IsTrigger: 1
+   m_UsedByEffector: 0
+-  m_UsedByComposite: 0
++  m_CompositeOperation: 0
++  m_CompositeOrder: 0
+   m_Offset: {x: -0.010968208, y: -0.021936655}
+   m_SpriteTilingProperty:
+     border: {x: 0, y: 0, z: 0, w: 0}
+@@ -213,12 +212,11 @@
+     drawMode: 0
+     adaptiveTiling: 0
+   m_AutoTiling: 0
+-  serializedVersion: 2
+   m_Size: {x: 0.90494156, y: 0.4881444}
+   m_EdgeRadius: 0
+ --- !u!50 &20316591
+ Rigidbody2D:
+-  serializedVersion: 4
++  serializedVersion: 5
+   m_ObjectHideFlags: 0
+   m_CorrespondingSourceObject: {fileID: 0}
+   m_PrefabInstance: {fileID: 0}
+@@ -229,8 +227,8 @@
+   m_UseFullKinematicContacts: 0
+   m_UseAutoMass: 0
+   m_Mass: 0.0001
+-  m_LinearDrag: 0
+-  m_AngularDrag: 0
++  m_LinearDamping: 0
++  m_AngularDamping: 0
+   m_GravityScale: 0
+   m_Material: {fileID: 0}
+   m_IncludeLayers:
+@@ -260,6 +258,9 @@
+   m_ReflectionProbeUsage: 1
+   m_RayTracingMode: 0
+   m_RayTraceProcedural: 0
++  m_RayTracingAccelStructBuildFlagsOverride: 0
++  m_RayTracingAccelStructBuildFlags: 1
++  m_SmallMeshCulling: 1
+   m_RenderingLayerMask: 1
+   m_RendererPriority: 0
+   m_Materials:
+@@ -352,6 +353,7 @@
+   m_PrefabAsset: {fileID: 0}
+   m_GameObject: {fileID: 62820797}
+   m_Enabled: 1
++  serializedVersion: 3
+   m_Density: 1
+   m_Material: {fileID: 0}
+   m_IncludeLayers:
+@@ -375,7 +377,8 @@
+     m_Bits: 4294967295
+   m_IsTrigger: 1
+   m_UsedByEffector: 0
+-  m_UsedByComposite: 0
++  m_CompositeOperation: 0
++  m_CompositeOrder: 0
+   m_Offset: {x: -0.010968208, y: -0.021936655}
+   m_SpriteTilingProperty:
+     border: {x: 0, y: 0, z: 0, w: 0}
+@@ -386,12 +389,11 @@
+     drawMode: 0
+     adaptiveTiling: 0
+   m_AutoTiling: 0
+-  serializedVersion: 2
+   m_Size: {x: 0.90494156, y: 0.4881444}
+   m_EdgeRadius: 0
+ --- !u!50 &62820801
+ Rigidbody2D:
+-  serializedVersion: 4
++  serializedVersion: 5
+   m_ObjectHideFlags: 0
+   m_CorrespondingSourceObject: {fileID: 0}
+   m_PrefabInstance: {fileID: 0}
+@@ -402,8 +404,8 @@
+   m_UseFullKinematicContacts: 0
+   m_UseAutoMass: 0
+   m_Mass: 0.0001
+-  m_LinearDrag: 0
+-  m_AngularDrag: 0
++  m_LinearDamping: 0
++  m_AngularDamping: 0
+   m_GravityScale: 0
+   m_Material: {fileID: 0}
+   m_IncludeLayers:
+@@ -433,6 +435,9 @@
+   m_ReflectionProbeUsage: 1
+   m_RayTracingMode: 0
+   m_RayTraceProcedural: 0
++  m_RayTracingAccelStructBuildFlagsOverride: 0
++  m_RayTracingAccelStructBuildFlags: 1
++  m_SmallMeshCulling: 1
+   m_RenderingLayerMask: 1
+   m_RendererPriority: 0
+   m_Materials:
+@@ -525,6 +530,7 @@
+   m_PrefabAsset: {fileID: 0}
+   m_GameObject: {fileID: 87262086}
+   m_Enabled: 1
++  serializedVersion: 3
+   m_Density: 1
+   m_Material: {fileID: 0}
+   m_IncludeLayers:
+@@ -548,7 +554,8 @@
+     m_Bits: 4294967295
+   m_IsTrigger: 1
+   m_UsedByEffector: 0
+-  m_UsedByComposite: 0
++  m_CompositeOperation: 0
++  m_CompositeOrder: 0
+   m_Offset: {x: -0.010968208, y: -0.021936655}
+   m_SpriteTilingProperty:
+     border: {x: 0, y: 0, z: 0, w: 0}
+@@ -559,12 +566,11 @@
+     drawMode: 0
+     adaptiveTiling: 0
+   m_AutoTiling: 0
+-  serializedVersion: 2
+   m_Size: {x: 0.90494156, y: 0.4881444}
+   m_EdgeRadius: 0
+ --- !u!50 &87262090
+ Rigidbody2D:
+-  serializedVersion: 4
++  serializedVersion: 5
+   m_ObjectHideFlags: 0
+   m_CorrespondingSourceObject: {fileID: 0}
+   m_PrefabInstance: {fileID: 0}
+@@ -575,8 +581,8 @@
+   m_UseFullKinematicContacts: 0
+   m_UseAutoMass: 0
+   m_Mass: 0.0001
+-  m_LinearDrag: 0
+-  m_AngularDrag: 0
++  m_LinearDamping: 0
++  m_AngularDamping: 0
+   m_GravityScale: 0
+   m_Material: {fileID: 0}
+   m_IncludeLayers:
+@@ -606,6 +612,9 @@
+   m_ReflectionProbeUsage: 1
+   m_RayTracingMode: 0
+   m_RayTraceProcedural: 0
++  m_RayTracingAccelStructBuildFlagsOverride: 0
++  m_RayTracingAccelStructBuildFlags: 1
++  m_SmallMeshCulling: 1
+   m_RenderingLayerMask: 1
+   m_RendererPriority: 0
+   m_Materials:
+@@ -698,6 +707,7 @@
+   m_PrefabAsset: {fileID: 0}
+   m_GameObject: {fileID: 189822586}
+   m_Enabled: 1
++  serializedVersion: 3
+   m_Density: 1
+   m_Material: {fileID: 0}
+   m_IncludeLayers:
+@@ -721,7 +731,8 @@
+     m_Bits: 4294967295
+   m_IsTrigger: 1
+   m_UsedByEffector: 0
+-  m_UsedByComposite: 0
++  m_CompositeOperation: 0
++  m_CompositeOrder: 0
+   m_Offset: {x: -0.010968208, y: -0.021936655}
+   m_SpriteTilingProperty:
+     border: {x: 0, y: 0, z: 0, w: 0}
+@@ -732,12 +743,11 @@
+     drawMode: 0
+     adaptiveTiling: 0
+   m_AutoTiling: 0
+-  serializedVersion: 2
+   m_Size: {x: 0.90494156, y: 0.4881444}
+   m_EdgeRadius: 0
+ --- !u!50 &189822590
+ Rigidbody2D:
+-  serializedVersion: 4
++  serializedVersion: 5
+   m_ObjectHideFlags: 0
+   m_CorrespondingSourceObject: {fileID: 0}
+   m_PrefabInstance: {fileID: 0}
+@@ -748,8 +758,8 @@
+   m_UseFullKinematicContacts: 0
+   m_UseAutoMass: 0
+   m_Mass: 0.0001
+-  m_LinearDrag: 0
+-  m_AngularDrag: 0
++  m_LinearDamping: 0
++  m_AngularDamping: 0
+   m_GravityScale: 0
+   m_Material: {fileID: 0}
+   m_IncludeLayers:
+@@ -779,6 +789,9 @@
+   m_ReflectionProbeUsage: 1
+   m_RayTracingMode: 0
+   m_RayTraceProcedural: 0
++  m_RayTracingAccelStructBuildFlagsOverride: 0
++  m_RayTracingAccelStructBuildFlags: 1
++  m_SmallMeshCulling: 1
+   m_RenderingLayerMask: 1
+   m_RendererPriority: 0
+   m_Materials:
+@@ -1046,7 +1059,7 @@
+   IsGround: 1
+ --- !u!95 &421910296
+ Animator:
+-  serializedVersion: 5
++  serializedVersion: 7
+   m_ObjectHideFlags: 0
+   m_CorrespondingSourceObject: {fileID: 0}
+   m_PrefabInstance: {fileID: 0}
+@@ -1060,6 +1073,7 @@
+   m_ApplyRootMotion: 0
+   m_LinearVelocityBlending: 0
+   m_StabilizeFeet: 0
++  m_AnimatePhysics: 0
+   m_WarningMessage: 
+   m_HasTransformHierarchy: 1
+   m_AllowConstantClipSamplingOptimization: 1
+@@ -1067,7 +1081,7 @@
+   m_WriteDefaultValuesOnDisable: 0
+ --- !u!50 &421910297
+ Rigidbody2D:
+-  serializedVersion: 4
++  serializedVersion: 5
+   m_ObjectHideFlags: 0
+   m_CorrespondingSourceObject: {fileID: 0}
+   m_PrefabInstance: {fileID: 0}
+@@ -1078,8 +1092,8 @@
+   m_UseFullKinematicContacts: 0
+   m_UseAutoMass: 0
+   m_Mass: 1
+-  m_LinearDrag: 0
+-  m_AngularDrag: 0.05
++  m_LinearDamping: 0
++  m_AngularDamping: 0.05
+   m_GravityScale: 1
+   m_Material: {fileID: 0}
+   m_IncludeLayers:
+@@ -1100,6 +1114,7 @@
+   m_PrefabAsset: {fileID: 0}
+   m_GameObject: {fileID: 421910294}
+   m_Enabled: 1
++  serializedVersion: 3
+   m_Density: 1
+   m_Material: {fileID: 0}
+   m_IncludeLayers:
+@@ -1123,7 +1138,8 @@
+     m_Bits: 4294967295
+   m_IsTrigger: 0
+   m_UsedByEffector: 0
+-  m_UsedByComposite: 0
++  m_CompositeOperation: 0
++  m_CompositeOrder: 0
+   m_Offset: {x: -0.17608261, y: -0.22639108}
+   m_SpriteTilingProperty:
+     border: {x: 0, y: 0, z: 0, w: 0}
+@@ -1134,7 +1150,6 @@
+     drawMode: 0
+     adaptiveTiling: 0
+   m_AutoTiling: 0
+-  serializedVersion: 2
+   m_Size: {x: 1.4342384, y: 3.295672}
+   m_EdgeRadius: 0
+ --- !u!212 &421910299
+@@ -1154,6 +1169,9 @@
+   m_ReflectionProbeUsage: 1
+   m_RayTracingMode: 0
+   m_RayTraceProcedural: 0
++  m_RayTracingAccelStructBuildFlagsOverride: 0
++  m_RayTracingAccelStructBuildFlags: 1
++  m_SmallMeshCulling: 1
+   m_RenderingLayerMask: 1
+   m_RendererPriority: 0
+   m_Materials:
+@@ -1296,7 +1314,7 @@
+   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+ --- !u!50 &443266345
+ Rigidbody2D:
+-  serializedVersion: 4
++  serializedVersion: 5
+   m_ObjectHideFlags: 0
+   m_CorrespondingSourceObject: {fileID: 0}
+   m_PrefabInstance: {fileID: 0}
+@@ -1307,8 +1325,8 @@
+   m_UseFullKinematicContacts: 0
+   m_UseAutoMass: 0
+   m_Mass: 1
+-  m_LinearDrag: 0
+-  m_AngularDrag: 0.05
++  m_LinearDamping: 0
++  m_AngularDamping: 0.05
+   m_GravityScale: 1
+   m_Material: {fileID: 0}
+   m_IncludeLayers:
+@@ -1338,6 +1356,9 @@
+   m_ReflectionProbeUsage: 0
+   m_RayTracingMode: 0
+   m_RayTraceProcedural: 0
++  m_RayTracingAccelStructBuildFlagsOverride: 0
++  m_RayTracingAccelStructBuildFlags: 1
++  m_SmallMeshCulling: 1
+   m_RenderingLayerMask: 1
+   m_RendererPriority: 0
+   m_Materials:
+@@ -12876,6 +12897,7 @@
+   m_PrefabAsset: {fileID: 0}
+   m_GameObject: {fileID: 443266341}
+   m_Enabled: 1
++  serializedVersion: 3
+   m_Density: 1
+   m_Material: {fileID: 0}
+   m_IncludeLayers:
+@@ -12899,7 +12921,8 @@
+     m_Bits: 4294967295
+   m_IsTrigger: 0
+   m_UsedByEffector: 0
+-  m_UsedByComposite: 0
++  m_CompositeOperation: 0
++  m_CompositeOrder: 0
+   m_Offset: {x: 0, y: 0}
+   m_EdgeRadius: 0
+   m_Points:
+@@ -12919,6 +12942,7 @@
+   m_PrefabAsset: {fileID: 0}
+   m_GameObject: {fileID: 443266341}
+   m_Enabled: 1
++  serializedVersion: 3
+   m_Density: 1
+   m_Material: {fileID: 0}
+   m_IncludeLayers:
+@@ -12942,7 +12966,8 @@
+     m_Bits: 4294967295
+   m_IsTrigger: 0
+   m_UsedByEffector: 0
+-  m_UsedByComposite: 0
++  m_CompositeOperation: 0
++  m_CompositeOrder: 0
+   m_Offset: {x: 0, y: 0}
+   m_EdgeRadius: 0
+   m_Points:
+@@ -12963,6 +12988,7 @@
+   m_PrefabAsset: {fileID: 0}
+   m_GameObject: {fileID: 443266341}
+   m_Enabled: 1
++  serializedVersion: 3
+   m_Density: 1
+   m_Material: {fileID: 0}
+   m_IncludeLayers:
+@@ -12986,7 +13012,8 @@
+     m_Bits: 4294967295
+   m_IsTrigger: 0
+   m_UsedByEffector: 0
+-  m_UsedByComposite: 0
++  m_CompositeOperation: 0
++  m_CompositeOrder: 0
+   m_Offset: {x: 0, y: 0}
+   m_EdgeRadius: 0
+   m_Points:
+@@ -13017,6 +13044,7 @@
+   m_PrefabAsset: {fileID: 0}
+   m_GameObject: {fileID: 443266341}
+   m_Enabled: 1
++  serializedVersion: 3
+   m_Density: 1
+   m_Material: {fileID: 0}
+   m_IncludeLayers:
+@@ -13040,7 +13068,8 @@
+     m_Bits: 4294967295
+   m_IsTrigger: 0
+   m_UsedByEffector: 0
+-  m_UsedByComposite: 0
++  m_CompositeOperation: 0
++  m_CompositeOrder: 0
+   m_Offset: {x: 0, y: 0}
+   m_EdgeRadius: 0
+   m_Points:
+@@ -13111,6 +13140,7 @@
+   m_PrefabAsset: {fileID: 0}
+   m_GameObject: {fileID: 510745900}
+   m_Enabled: 1
++  serializedVersion: 3
+   m_Density: 1
+   m_Material: {fileID: 0}
+   m_IncludeLayers:
+@@ -13134,7 +13164,8 @@
+     m_Bits: 4294967295
+   m_IsTrigger: 1
+   m_UsedByEffector: 0
+-  m_UsedByComposite: 0
++  m_CompositeOperation: 0
++  m_CompositeOrder: 0
+   m_Offset: {x: -0.010968208, y: -0.021936655}
+   m_SpriteTilingProperty:
+     border: {x: 0, y: 0, z: 0, w: 0}
+@@ -13145,12 +13176,11 @@
+     drawMode: 0
+     adaptiveTiling: 0
+   m_AutoTiling: 0
+-  serializedVersion: 2
+   m_Size: {x: 0.90494156, y: 0.4881444}
+   m_EdgeRadius: 0
+ --- !u!50 &510745904
+ Rigidbody2D:
+-  serializedVersion: 4
++  serializedVersion: 5
+   m_ObjectHideFlags: 0
+   m_CorrespondingSourceObject: {fileID: 0}
+   m_PrefabInstance: {fileID: 0}
+@@ -13161,8 +13191,8 @@
+   m_UseFullKinematicContacts: 0
+   m_UseAutoMass: 0
+   m_Mass: 0.0001
+-  m_LinearDrag: 0
+-  m_AngularDrag: 0
++  m_LinearDamping: 0
++  m_AngularDamping: 0
+   m_GravityScale: 0
+   m_Material: {fileID: 0}
+   m_IncludeLayers:
+@@ -13192,6 +13222,9 @@
+   m_ReflectionProbeUsage: 1
+   m_RayTracingMode: 0
+   m_RayTraceProcedural: 0
++  m_RayTracingAccelStructBuildFlagsOverride: 0
++  m_RayTracingAccelStructBuildFlags: 1
++  m_SmallMeshCulling: 1
+   m_RenderingLayerMask: 1
+   m_RendererPriority: 0
+   m_Materials:
+@@ -13227,6 +13260,63 @@
+   m_WasSpriteAssigned: 1
+   m_MaskInteraction: 0
+   m_SpriteSortPoint: 0
++--- !u!1001 &512088859
++PrefabInstance:
++  m_ObjectHideFlags: 0
++  serializedVersion: 2
++  m_Modification:
++    serializedVersion: 3
++    m_TransformParent: {fileID: 0}
++    m_Modifications:
++    - target: {fileID: 5226030084766550650, guid: f038f1797e279bd4483ce4b950d754a2, type: 3}
++      propertyPath: m_Name
++      value: EventSystem (1)
++      objectReference: {fileID: 0}
++    - target: {fileID: 7442257547023594795, guid: f038f1797e279bd4483ce4b950d754a2, type: 3}
++      propertyPath: m_LocalPosition.x
++      value: 0
++      objectReference: {fileID: 0}
++    - target: {fileID: 7442257547023594795, guid: f038f1797e279bd4483ce4b950d754a2, type: 3}
++      propertyPath: m_LocalPosition.y
++      value: 0
++      objectReference: {fileID: 0}
++    - target: {fileID: 7442257547023594795, guid: f038f1797e279bd4483ce4b950d754a2, type: 3}
++      propertyPath: m_LocalPosition.z
++      value: 0
++      objectReference: {fileID: 0}
++    - target: {fileID: 7442257547023594795, guid: f038f1797e279bd4483ce4b950d754a2, type: 3}
++      propertyPath: m_LocalRotation.w
++      value: 1
++      objectReference: {fileID: 0}
++    - target: {fileID: 7442257547023594795, guid: f038f1797e279bd4483ce4b950d754a2, type: 3}
++      propertyPath: m_LocalRotation.x
++      value: 0
++      objectReference: {fileID: 0}
++    - target: {fileID: 7442257547023594795, guid: f038f1797e279bd4483ce4b950d754a2, type: 3}
++      propertyPath: m_LocalRotation.y
++      value: 0
++      objectReference: {fileID: 0}
++    - target: {fileID: 7442257547023594795, guid: f038f1797e279bd4483ce4b950d754a2, type: 3}
++      propertyPath: m_LocalRotation.z
++      value: 0
++      objectReference: {fileID: 0}
++    - target: {fileID: 7442257547023594795, guid: f038f1797e279bd4483ce4b950d754a2, type: 3}
++      propertyPath: m_LocalEulerAnglesHint.x
++      value: 0
++      objectReference: {fileID: 0}
++    - target: {fileID: 7442257547023594795, guid: f038f1797e279bd4483ce4b950d754a2, type: 3}
++      propertyPath: m_LocalEulerAnglesHint.y
++      value: 0
++      objectReference: {fileID: 0}
++    - target: {fileID: 7442257547023594795, guid: f038f1797e279bd4483ce4b950d754a2, type: 3}
++      propertyPath: m_LocalEulerAnglesHint.z
++      value: 0
++      objectReference: {fileID: 0}
++    m_RemovedComponents: []
++    m_RemovedGameObjects: []
++    m_AddedGameObjects: []
++    m_AddedComponents: []
++  m_SourcePrefab: {fileID: 100100000, guid: f038f1797e279bd4483ce4b950d754a2, type: 3}
+ --- !u!1 &519420028
+ GameObject:
+   m_ObjectHideFlags: 0
+@@ -13380,7 +13470,7 @@
+   m_IsActive: 1
+ --- !u!95 &538288604
+ Animator:
+-  serializedVersion: 5
++  serializedVersion: 7
+   m_ObjectHideFlags: 0
+   m_CorrespondingSourceObject: {fileID: 0}
+   m_PrefabInstance: {fileID: 0}
+@@ -13394,6 +13484,7 @@
+   m_ApplyRootMotion: 0
+   m_LinearVelocityBlending: 0
+   m_StabilizeFeet: 0
++  m_AnimatePhysics: 0
+   m_WarningMessage: 
+   m_HasTransformHierarchy: 1
+   m_AllowConstantClipSamplingOptimization: 1
+@@ -13416,6 +13507,9 @@
+   m_ReflectionProbeUsage: 1
+   m_RayTracingMode: 0
+   m_RayTraceProcedural: 0
++  m_RayTracingAccelStructBuildFlagsOverride: 0
++  m_RayTracingAccelStructBuildFlags: 1
++  m_SmallMeshCulling: 1
+   m_RenderingLayerMask: 1
+   m_RendererPriority: 0
+   m_Materials:
+@@ -13469,7 +13563,7 @@
+   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+ --- !u!50 &538288607
+ Rigidbody2D:
+-  serializedVersion: 4
++  serializedVersion: 5
+   m_ObjectHideFlags: 0
+   m_CorrespondingSourceObject: {fileID: 0}
+   m_PrefabInstance: {fileID: 0}
+@@ -13480,8 +13574,8 @@
+   m_UseFullKinematicContacts: 0
+   m_UseAutoMass: 0
+   m_Mass: 1
+-  m_LinearDrag: 0
+-  m_AngularDrag: 0.05
++  m_LinearDamping: 0
++  m_AngularDamping: 0.05
+   m_GravityScale: 1
+   m_Material: {fileID: 0}
+   m_IncludeLayers:
+@@ -13502,6 +13596,7 @@
+   m_PrefabAsset: {fileID: 0}
+   m_GameObject: {fileID: 538288603}
+   m_Enabled: 1
++  serializedVersion: 3
+   m_Density: 1
+   m_Material: {fileID: 0}
+   m_IncludeLayers:
+@@ -13525,7 +13620,8 @@
+     m_Bits: 4294967295
+   m_IsTrigger: 0
+   m_UsedByEffector: 0
+-  m_UsedByComposite: 0
++  m_CompositeOperation: 0
++  m_CompositeOrder: 0
+   m_Offset: {x: 0.108501434, y: -0.30139148}
+   m_SpriteTilingProperty:
+     border: {x: 0, y: 0, z: 0, w: 0}
+@@ -13536,7 +13632,6 @@
+     drawMode: 0
+     adaptiveTiling: 0
+   m_AutoTiling: 0
+-  serializedVersion: 2
+   m_Size: {x: 1.7094269, y: 3.348995}
+   m_EdgeRadius: 0
+ --- !u!114 &538288609
+@@ -13642,6 +13737,9 @@
+   m_ReflectionProbeUsage: 1
+   m_RayTracingMode: 0
+   m_RayTraceProcedural: 0
++  m_RayTracingAccelStructBuildFlagsOverride: 0
++  m_RayTracingAccelStructBuildFlags: 1
++  m_SmallMeshCulling: 1
+   m_RenderingLayerMask: 1
+   m_RendererPriority: 0
+   m_Materials:
+@@ -13726,6 +13824,9 @@
+   m_ReflectionProbeUsage: 1
+   m_RayTracingMode: 0
+   m_RayTraceProcedural: 0
++  m_RayTracingAccelStructBuildFlagsOverride: 0
++  m_RayTracingAccelStructBuildFlags: 1
++  m_SmallMeshCulling: 1
+   m_RenderingLayerMask: 1
+   m_RendererPriority: 0
+   m_Materials:
+@@ -14096,6 +14197,9 @@
+   m_ReflectionProbeUsage: 1
+   m_RayTracingMode: 0
+   m_RayTraceProcedural: 0
++  m_RayTracingAccelStructBuildFlagsOverride: 0
++  m_RayTracingAccelStructBuildFlags: 1
++  m_SmallMeshCulling: 1
+   m_RenderingLayerMask: 1
+   m_RendererPriority: 0
+   m_Materials:
+@@ -14180,6 +14284,9 @@
+   m_ReflectionProbeUsage: 1
+   m_RayTracingMode: 0
+   m_RayTraceProcedural: 0
++  m_RayTracingAccelStructBuildFlagsOverride: 0
++  m_RayTracingAccelStructBuildFlags: 1
++  m_SmallMeshCulling: 1
+   m_RenderingLayerMask: 1
+   m_RendererPriority: 0
+   m_Materials:
+@@ -14215,6 +14322,103 @@
+   m_WasSpriteAssigned: 1
+   m_MaskInteraction: 0
+   m_SpriteSortPoint: 0
++--- !u!1001 &983029398
++PrefabInstance:
++  m_ObjectHideFlags: 0
++  serializedVersion: 2
++  m_Modification:
++    serializedVersion: 3
++    m_TransformParent: {fileID: 0}
++    m_Modifications:
++    - target: {fileID: 1772815438165050505, guid: b23425c1ea92d52498fc2009d372ea89, type: 3}
++      propertyPath: m_Name
++      value: IvenCanvas
++      objectReference: {fileID: 0}
++    - target: {fileID: 5002451900584565759, guid: b23425c1ea92d52498fc2009d372ea89, type: 3}
++      propertyPath: m_Pivot.x
++      value: 0
++      objectReference: {fileID: 0}
++    - target: {fileID: 5002451900584565759, guid: b23425c1ea92d52498fc2009d372ea89, type: 3}
++      propertyPath: m_Pivot.y
++      value: 0
++      objectReference: {fileID: 0}
++    - target: {fileID: 5002451900584565759, guid: b23425c1ea92d52498fc2009d372ea89, type: 3}
++      propertyPath: m_AnchorMax.x
++      value: 0
++      objectReference: {fileID: 0}
++    - target: {fileID: 5002451900584565759, guid: b23425c1ea92d52498fc2009d372ea89, type: 3}
++      propertyPath: m_AnchorMax.y
++      value: 0
++      objectReference: {fileID: 0}
++    - target: {fileID: 5002451900584565759, guid: b23425c1ea92d52498fc2009d372ea89, type: 3}
++      propertyPath: m_AnchorMin.x
++      value: 0
++      objectReference: {fileID: 0}
++    - target: {fileID: 5002451900584565759, guid: b23425c1ea92d52498fc2009d372ea89, type: 3}
++      propertyPath: m_AnchorMin.y
++      value: 0
++      objectReference: {fileID: 0}
++    - target: {fileID: 5002451900584565759, guid: b23425c1ea92d52498fc2009d372ea89, type: 3}
++      propertyPath: m_SizeDelta.x
++      value: 0
++      objectReference: {fileID: 0}
++    - target: {fileID: 5002451900584565759, guid: b23425c1ea92d52498fc2009d372ea89, type: 3}
++      propertyPath: m_SizeDelta.y
++      value: 0
++      objectReference: {fileID: 0}
++    - target: {fileID: 5002451900584565759, guid: b23425c1ea92d52498fc2009d372ea89, type: 3}
++      propertyPath: m_LocalPosition.x
++      value: 0
++      objectReference: {fileID: 0}
++    - target: {fileID: 5002451900584565759, guid: b23425c1ea92d52498fc2009d372ea89, type: 3}
++      propertyPath: m_LocalPosition.y
++      value: 0
++      objectReference: {fileID: 0}
++    - target: {fileID: 5002451900584565759, guid: b23425c1ea92d52498fc2009d372ea89, type: 3}
++      propertyPath: m_LocalPosition.z
++      value: 0
++      objectReference: {fileID: 0}
++    - target: {fileID: 5002451900584565759, guid: b23425c1ea92d52498fc2009d372ea89, type: 3}
++      propertyPath: m_LocalRotation.w
++      value: 1
++      objectReference: {fileID: 0}
++    - target: {fileID: 5002451900584565759, guid: b23425c1ea92d52498fc2009d372ea89, type: 3}
++      propertyPath: m_LocalRotation.x
++      value: 0
++      objectReference: {fileID: 0}
++    - target: {fileID: 5002451900584565759, guid: b23425c1ea92d52498fc2009d372ea89, type: 3}
++      propertyPath: m_LocalRotation.y
++      value: 0
++      objectReference: {fileID: 0}
++    - target: {fileID: 5002451900584565759, guid: b23425c1ea92d52498fc2009d372ea89, type: 3}
++      propertyPath: m_LocalRotation.z
++      value: 0
++      objectReference: {fileID: 0}
++    - target: {fileID: 5002451900584565759, guid: b23425c1ea92d52498fc2009d372ea89, type: 3}
++      propertyPath: m_AnchoredPosition.x
++      value: 0
++      objectReference: {fileID: 0}
++    - target: {fileID: 5002451900584565759, guid: b23425c1ea92d52498fc2009d372ea89, type: 3}
++      propertyPath: m_AnchoredPosition.y
++      value: 0
++      objectReference: {fileID: 0}
++    - target: {fileID: 5002451900584565759, guid: b23425c1ea92d52498fc2009d372ea89, type: 3}
++      propertyPath: m_LocalEulerAnglesHint.x
++      value: 0
++      objectReference: {fileID: 0}
++    - target: {fileID: 5002451900584565759, guid: b23425c1ea92d52498fc2009d372ea89, type: 3}
++      propertyPath: m_LocalEulerAnglesHint.y
++      value: 0
++      objectReference: {fileID: 0}
++    - target: {fileID: 5002451900584565759, guid: b23425c1ea92d52498fc2009d372ea89, type: 3}
++      propertyPath: m_LocalEulerAnglesHint.z
++      value: 0
++      objectReference: {fileID: 0}
++    m_RemovedComponents: []
++    m_RemovedGameObjects: []
++    m_AddedGameObjects: []
++    m_AddedComponents: []
++  m_SourcePrefab: {fileID: 100100000, guid: b23425c1ea92d52498fc2009d372ea89, type: 3}
+ --- !u!1 &1042013671
+ GameObject:
+   m_ObjectHideFlags: 0
+@@ -14266,6 +14470,9 @@
+   m_ReflectionProbeUsage: 0
+   m_RayTracingMode: 0
+   m_RayTraceProcedural: 0
++  m_RayTracingAccelStructBuildFlagsOverride: 0
++  m_RayTracingAccelStructBuildFlags: 1
++  m_SmallMeshCulling: 1
+   m_RenderingLayerMask: 1
+   m_RendererPriority: 0
+   m_Materials:
+@@ -19102,6 +19309,7 @@
+   m_PrefabAsset: {fileID: 0}
+   m_GameObject: {fileID: 1054106892}
+   m_Enabled: 1
++  serializedVersion: 3
+   m_Density: 1
+   m_Material: {fileID: 0}
+   m_IncludeLayers:
+@@ -19125,7 +19333,8 @@
+     m_Bits: 4294967295
+   m_IsTrigger: 1
+   m_UsedByEffector: 0
+-  m_UsedByComposite: 0
++  m_CompositeOperation: 0
++  m_CompositeOrder: 0
+   m_Offset: {x: -0.010968208, y: -0.021936655}
+   m_SpriteTilingProperty:
+     border: {x: 0, y: 0, z: 0, w: 0}
+@@ -19136,12 +19345,11 @@
+     drawMode: 0
+     adaptiveTiling: 0
+   m_AutoTiling: 0
+-  serializedVersion: 2
+   m_Size: {x: 0.90494156, y: 0.4881444}
+   m_EdgeRadius: 0
+ --- !u!50 &1054106896
+ Rigidbody2D:
+-  serializedVersion: 4
++  serializedVersion: 5
+   m_ObjectHideFlags: 0
+   m_CorrespondingSourceObject: {fileID: 0}
+   m_PrefabInstance: {fileID: 0}
+@@ -19152,8 +19360,8 @@
+   m_UseFullKinematicContacts: 0
+   m_UseAutoMass: 0
+   m_Mass: 0.0001
+-  m_LinearDrag: 0
+-  m_AngularDrag: 0
++  m_LinearDamping: 0
++  m_AngularDamping: 0
+   m_GravityScale: 0
+   m_Material: {fileID: 0}
+   m_IncludeLayers:
+@@ -19183,6 +19391,9 @@
+   m_ReflectionProbeUsage: 1
+   m_RayTracingMode: 0
+   m_RayTraceProcedural: 0
++  m_RayTracingAccelStructBuildFlagsOverride: 0
++  m_RayTracingAccelStructBuildFlags: 1
++  m_SmallMeshCulling: 1
+   m_RenderingLayerMask: 1
+   m_RendererPriority: 0
+   m_Materials:
+@@ -19376,6 +19587,7 @@
+   m_PrefabAsset: {fileID: 0}
+   m_GameObject: {fileID: 1162273486}
+   m_Enabled: 1
++  serializedVersion: 3
+   m_Density: 1
+   m_Material: {fileID: 0}
+   m_IncludeLayers:
+@@ -19399,7 +19611,8 @@
+     m_Bits: 4294967295
+   m_IsTrigger: 1
+   m_UsedByEffector: 0
+-  m_UsedByComposite: 0
++  m_CompositeOperation: 0
++  m_CompositeOrder: 0
+   m_Offset: {x: 0, y: -0.015984893}
+   m_SpriteTilingProperty:
+     border: {x: 0, y: 0, z: 0, w: 0}
+@@ -19410,7 +19623,6 @@
+     drawMode: 0
+     adaptiveTiling: 0
+   m_AutoTiling: 0
+-  serializedVersion: 2
+   m_Size: {x: 0.65898895, y: 0.71227145}
+   m_EdgeRadius: 0
+ --- !u!212 &1162273489
+@@ -19430,6 +19642,9 @@
+   m_ReflectionProbeUsage: 1
+   m_RayTracingMode: 0
+   m_RayTraceProcedural: 0
++  m_RayTracingAccelStructBuildFlagsOverride: 0
++  m_RayTracingAccelStructBuildFlags: 1
++  m_SmallMeshCulling: 1
+   m_RenderingLayerMask: 1
+   m_RendererPriority: 0
+   m_Materials:
+@@ -19560,6 +19775,9 @@
+   m_ReflectionProbeUsage: 1
+   m_RayTracingMode: 0
+   m_RayTraceProcedural: 0
++  m_RayTracingAccelStructBuildFlagsOverride: 0
++  m_RayTracingAccelStructBuildFlags: 1
++  m_SmallMeshCulling: 1
+   m_RenderingLayerMask: 1
+   m_RendererPriority: 0
+   m_Materials:
+@@ -19652,6 +19870,7 @@
+   m_PrefabAsset: {fileID: 0}
+   m_GameObject: {fileID: 1302220964}
+   m_Enabled: 1
++  serializedVersion: 3
+   m_Density: 1
+   m_Material: {fileID: 0}
+   m_IncludeLayers:
+@@ -19675,7 +19894,8 @@
+     m_Bits: 4294967295
+   m_IsTrigger: 1
+   m_UsedByEffector: 0
+-  m_UsedByComposite: 0
++  m_CompositeOperation: 0
++  m_CompositeOrder: 0
+   m_Offset: {x: -0.010968208, y: -0.021936655}
+   m_SpriteTilingProperty:
+     border: {x: 0, y: 0, z: 0, w: 0}
+@@ -19686,12 +19906,11 @@
+     drawMode: 0
+     adaptiveTiling: 0
+   m_AutoTiling: 0
+-  serializedVersion: 2
+   m_Size: {x: 0.90494156, y: 0.4881444}
+   m_EdgeRadius: 0
+ --- !u!50 &1302220968
+ Rigidbody2D:
+-  serializedVersion: 4
++  serializedVersion: 5
+   m_ObjectHideFlags: 0
+   m_CorrespondingSourceObject: {fileID: 0}
+   m_PrefabInstance: {fileID: 0}
+@@ -19702,8 +19921,8 @@
+   m_UseFullKinematicContacts: 0
+   m_UseAutoMass: 0
+   m_Mass: 0.0001
+-  m_LinearDrag: 0
+-  m_AngularDrag: 0
++  m_LinearDamping: 0
++  m_AngularDamping: 0
+   m_GravityScale: 0
+   m_Material: {fileID: 0}
+   m_IncludeLayers:
+@@ -19733,6 +19952,9 @@
+   m_ReflectionProbeUsage: 1
+   m_RayTracingMode: 0
+   m_RayTraceProcedural: 0
++  m_RayTracingAccelStructBuildFlagsOverride: 0
++  m_RayTracingAccelStructBuildFlags: 1
++  m_SmallMeshCulling: 1
+   m_RenderingLayerMask: 1
+   m_RendererPriority: 0
+   m_Materials:
+@@ -19825,6 +20047,7 @@
+   m_PrefabAsset: {fileID: 0}
+   m_GameObject: {fileID: 1350545438}
+   m_Enabled: 1
++  serializedVersion: 3
+   m_Density: 1
+   m_Material: {fileID: 0}
+   m_IncludeLayers:
+@@ -19848,7 +20071,8 @@
+     m_Bits: 4294967295
+   m_IsTrigger: 1
+   m_UsedByEffector: 0
+-  m_UsedByComposite: 0
++  m_CompositeOperation: 0
++  m_CompositeOrder: 0
+   m_Offset: {x: -0.010968208, y: -0.021936655}
+   m_SpriteTilingProperty:
+     border: {x: 0, y: 0, z: 0, w: 0}
+@@ -19859,12 +20083,11 @@
+     drawMode: 0
+     adaptiveTiling: 0
+   m_AutoTiling: 0
+-  serializedVersion: 2
+   m_Size: {x: 0.90494156, y: 0.4881444}
+   m_EdgeRadius: 0
+ --- !u!50 &1350545442
+ Rigidbody2D:
+-  serializedVersion: 4
++  serializedVersion: 5
+   m_ObjectHideFlags: 0
+   m_CorrespondingSourceObject: {fileID: 0}
+   m_PrefabInstance: {fileID: 0}
+@@ -19875,8 +20098,8 @@
+   m_UseFullKinematicContacts: 0
+   m_UseAutoMass: 0
+   m_Mass: 0.0001
+-  m_LinearDrag: 0
+-  m_AngularDrag: 0
++  m_LinearDamping: 0
++  m_AngularDamping: 0
+   m_GravityScale: 0
+   m_Material: {fileID: 0}
+   m_IncludeLayers:
+@@ -19906,6 +20129,9 @@
+   m_ReflectionProbeUsage: 1
+   m_RayTracingMode: 0
+   m_RayTraceProcedural: 0
++  m_RayTracingAccelStructBuildFlagsOverride: 0
++  m_RayTracingAccelStructBuildFlags: 1
++  m_SmallMeshCulling: 1
+   m_RenderingLayerMask: 1
+   m_RendererPriority: 0
+   m_Materials:
+@@ -19941,6 +20167,63 @@
+   m_WasSpriteAssigned: 1
+   m_MaskInteraction: 0
+   m_SpriteSortPoint: 0
++--- !u!1001 &1412113563
++PrefabInstance:
++  m_ObjectHideFlags: 0
++  serializedVersion: 2
++  m_Modification:
++    serializedVersion: 3
++    m_TransformParent: {fileID: 0}
++    m_Modifications:
++    - target: {fileID: 4677571804177914168, guid: 43e0951a42aaccb46afc13ff26bc0d96, type: 3}
++      propertyPath: m_Name
++      value: item
++      objectReference: {fileID: 0}
++    - target: {fileID: 5710295981008988116, guid: 43e0951a42aaccb46afc13ff26bc0d96, type: 3}
++      propertyPath: m_LocalPosition.x
++      value: 0
++      objectReference: {fileID: 0}
++    - target: {fileID: 5710295981008988116, guid: 43e0951a42aaccb46afc13ff26bc0d96, type: 3}
++      propertyPath: m_LocalPosition.y
++      value: 0
++      objectReference: {fileID: 0}
++    - target: {fileID: 5710295981008988116, guid: 43e0951a42aaccb46afc13ff26bc0d96, type: 3}
++      propertyPath: m_LocalPosition.z
++      value: 5.0824633
++      objectReference: {fileID: 0}
++    - target: {fileID: 5710295981008988116, guid: 43e0951a42aaccb46afc13ff26bc0d96, type: 3}
++      propertyPath: m_LocalRotation.w
++      value: 1
++      objectReference: {fileID: 0}
++    - target: {fileID: 5710295981008988116, guid: 43e0951a42aaccb46afc13ff26bc0d96, type: 3}
++      propertyPath: m_LocalRotation.x
++      value: 0
++      objectReference: {fileID: 0}
++    - target: {fileID: 5710295981008988116, guid: 43e0951a42aaccb46afc13ff26bc0d96, type: 3}
++      propertyPath: m_LocalRotation.y
++      value: 0
++      objectReference: {fileID: 0}
++    - target: {fileID: 5710295981008988116, guid: 43e0951a42aaccb46afc13ff26bc0d96, type: 3}
++      propertyPath: m_LocalRotation.z
++      value: 0
++      objectReference: {fileID: 0}
++    - target: {fileID: 5710295981008988116, guid: 43e0951a42aaccb46afc13ff26bc0d96, type: 3}
++      propertyPath: m_LocalEulerAnglesHint.x
++      value: 0
++      objectReference: {fileID: 0}
++    - target: {fileID: 5710295981008988116, guid: 43e0951a42aaccb46afc13ff26bc0d96, type: 3}
++      propertyPath: m_LocalEulerAnglesHint.y
++      value: 0
++      objectReference: {fileID: 0}
++    - target: {fileID: 5710295981008988116, guid: 43e0951a42aaccb46afc13ff26bc0d96, type: 3}
++      propertyPath: m_LocalEulerAnglesHint.z
++      value: 0
++      objectReference: {fileID: 0}
++    m_RemovedComponents: []
++    m_RemovedGameObjects: []
++    m_AddedGameObjects: []
++    m_AddedComponents: []
++  m_SourcePrefab: {fileID: 100100000, guid: 43e0951a42aaccb46afc13ff26bc0d96, type: 3}
+ --- !u!1 &1422949915
+ GameObject:
+   m_ObjectHideFlags: 0
+@@ -19990,6 +20273,9 @@
+   m_ReflectionProbeUsage: 1
+   m_RayTracingMode: 0
+   m_RayTraceProcedural: 0
++  m_RayTracingAccelStructBuildFlagsOverride: 0
++  m_RayTracingAccelStructBuildFlags: 1
++  m_SmallMeshCulling: 1
+   m_RenderingLayerMask: 1
+   m_RendererPriority: 0
+   m_Materials:
+@@ -20074,6 +20360,9 @@
+   m_ReflectionProbeUsage: 1
+   m_RayTracingMode: 0
+   m_RayTraceProcedural: 0
++  m_RayTracingAccelStructBuildFlagsOverride: 0
++  m_RayTracingAccelStructBuildFlags: 1
++  m_SmallMeshCulling: 1
+   m_RenderingLayerMask: 1
+   m_RendererPriority: 0
+   m_Materials:
+@@ -20166,6 +20455,7 @@
+   m_PrefabAsset: {fileID: 0}
+   m_GameObject: {fileID: 1477767117}
+   m_Enabled: 1
++  serializedVersion: 3
+   m_Density: 1
+   m_Material: {fileID: 0}
+   m_IncludeLayers:
+@@ -20189,7 +20479,8 @@
+     m_Bits: 4294967295
+   m_IsTrigger: 1
+   m_UsedByEffector: 0
+-  m_UsedByComposite: 0
++  m_CompositeOperation: 0
++  m_CompositeOrder: 0
+   m_Offset: {x: -0.010968208, y: -0.021936655}
+   m_SpriteTilingProperty:
+     border: {x: 0, y: 0, z: 0, w: 0}
+@@ -20200,12 +20491,11 @@
+     drawMode: 0
+     adaptiveTiling: 0
+   m_AutoTiling: 0
+-  serializedVersion: 2
+   m_Size: {x: 0.90494156, y: 0.4881444}
+   m_EdgeRadius: 0
+ --- !u!50 &1477767121
+ Rigidbody2D:
+-  serializedVersion: 4
++  serializedVersion: 5
+   m_ObjectHideFlags: 0
+   m_CorrespondingSourceObject: {fileID: 0}
+   m_PrefabInstance: {fileID: 0}
+@@ -20216,8 +20506,8 @@
+   m_UseFullKinematicContacts: 0
+   m_UseAutoMass: 0
+   m_Mass: 0.0001
+-  m_LinearDrag: 0
+-  m_AngularDrag: 0
++  m_LinearDamping: 0
++  m_AngularDamping: 0
+   m_GravityScale: 0
+   m_Material: {fileID: 0}
+   m_IncludeLayers:
+@@ -20247,6 +20537,9 @@
+   m_ReflectionProbeUsage: 1
+   m_RayTracingMode: 0
+   m_RayTraceProcedural: 0
++  m_RayTracingAccelStructBuildFlagsOverride: 0
++  m_RayTracingAccelStructBuildFlags: 1
++  m_SmallMeshCulling: 1
+   m_RenderingLayerMask: 1
+   m_RendererPriority: 0
+   m_Materials:
+@@ -20307,7 +20600,7 @@
+   m_IsActive: 1
+ --- !u!50 &1517966672
+ Rigidbody2D:
+-  serializedVersion: 4
++  serializedVersion: 5
+   m_ObjectHideFlags: 0
+   m_CorrespondingSourceObject: {fileID: 0}
+   m_PrefabInstance: {fileID: 0}
+@@ -20318,8 +20611,8 @@
+   m_UseFullKinematicContacts: 0
+   m_UseAutoMass: 0
+   m_Mass: 1
+-  m_LinearDrag: 0
+-  m_AngularDrag: 0.05
++  m_LinearDamping: 0
++  m_AngularDamping: 0.05
+   m_GravityScale: 1
+   m_Material: {fileID: 0}
+   m_IncludeLayers:
+@@ -20340,6 +20633,7 @@
+   m_PrefabAsset: {fileID: 0}
+   m_GameObject: {fileID: 1517966671}
+   m_Enabled: 1
++  serializedVersion: 3
+   m_Density: 1
+   m_Material: {fileID: 0}
+   m_IncludeLayers:
+@@ -20363,7 +20657,8 @@
+     m_Bits: 4294967295
+   m_IsTrigger: 0
+   m_UsedByEffector: 0
+-  m_UsedByComposite: 0
++  m_CompositeOperation: 0
++  m_CompositeOrder: 0
+   m_Offset: {x: 0.108501434, y: -0.30139148}
+   m_SpriteTilingProperty:
+     border: {x: 0, y: 0, z: 0, w: 0}
+@@ -20374,7 +20669,6 @@
+     drawMode: 0
+     adaptiveTiling: 0
+   m_AutoTiling: 0
+-  serializedVersion: 2
+   m_Size: {x: 1.7094269, y: 3.348995}
+   m_EdgeRadius: 0
+ --- !u!114 &1517966674
+@@ -20433,7 +20727,7 @@
+   delayBeforeDeath: 1
+ --- !u!95 &1517966677
+ Animator:
+-  serializedVersion: 5
++  serializedVersion: 7
+   m_ObjectHideFlags: 0
+   m_CorrespondingSourceObject: {fileID: 0}
+   m_PrefabInstance: {fileID: 0}
+@@ -20447,6 +20741,7 @@
+   m_ApplyRootMotion: 0
+   m_LinearVelocityBlending: 0
+   m_StabilizeFeet: 0
++  m_AnimatePhysics: 0
+   m_WarningMessage: 
+   m_HasTransformHierarchy: 1
+   m_AllowConstantClipSamplingOptimization: 1
+@@ -20469,6 +20764,9 @@
+   m_ReflectionProbeUsage: 1
+   m_RayTracingMode: 0
+   m_RayTraceProcedural: 0
++  m_RayTracingAccelStructBuildFlagsOverride: 0
++  m_RayTracingAccelStructBuildFlags: 1
++  m_SmallMeshCulling: 1
+   m_RenderingLayerMask: 1
+   m_RendererPriority: 0
+   m_Materials:
+@@ -20569,6 +20867,9 @@
+   m_ReflectionProbeUsage: 1
+   m_RayTracingMode: 0
+   m_RayTraceProcedural: 0
++  m_RayTracingAccelStructBuildFlagsOverride: 0
++  m_RayTracingAccelStructBuildFlags: 1
++  m_SmallMeshCulling: 1
+   m_RenderingLayerMask: 1
+   m_RendererPriority: 0
+   m_Materials:
+@@ -20654,6 +20955,9 @@
+   m_ReflectionProbeUsage: 0
+   m_RayTracingMode: 0
+   m_RayTraceProcedural: 0
++  m_RayTracingAccelStructBuildFlagsOverride: 0
++  m_RayTracingAccelStructBuildFlags: 1
++  m_SmallMeshCulling: 1
+   m_RenderingLayerMask: 1
+   m_RendererPriority: 0
+   m_Materials:
+@@ -25879,6 +26183,9 @@
+   m_ReflectionProbeUsage: 1
+   m_RayTracingMode: 0
+   m_RayTraceProcedural: 0
++  m_RayTracingAccelStructBuildFlagsOverride: 0
++  m_RayTracingAccelStructBuildFlags: 1
++  m_SmallMeshCulling: 1
+   m_RenderingLayerMask: 1
+   m_RendererPriority: 0
+   m_Materials:
+@@ -26051,6 +26358,9 @@
+   m_ReflectionProbeUsage: 1
+   m_RayTracingMode: 0
+   m_RayTraceProcedural: 0
++  m_RayTracingAccelStructBuildFlagsOverride: 0
++  m_RayTracingAccelStructBuildFlags: 1
++  m_SmallMeshCulling: 1
+   m_RenderingLayerMask: 1
+   m_RendererPriority: 0
+   m_Materials:
+@@ -26190,6 +26500,9 @@
+   m_ReflectionProbeUsage: 0
+   m_RayTracingMode: 0
+   m_RayTraceProcedural: 0
++  m_RayTracingAccelStructBuildFlagsOverride: 0
++  m_RayTracingAccelStructBuildFlags: 1
++  m_SmallMeshCulling: 1
+   m_RenderingLayerMask: 1
+   m_RendererPriority: 0
+   m_Materials:
+@@ -26340,6 +26653,9 @@
+   m_ReflectionProbeUsage: 1
+   m_RayTracingMode: 0
+   m_RayTraceProcedural: 0
++  m_RayTracingAccelStructBuildFlagsOverride: 0
++  m_RayTracingAccelStructBuildFlags: 1
++  m_SmallMeshCulling: 1
+   m_RenderingLayerMask: 1
+   m_RendererPriority: 0
+   m_Materials:
+@@ -26432,6 +26748,7 @@
+   m_PrefabAsset: {fileID: 0}
+   m_GameObject: {fileID: 2081701332}
+   m_Enabled: 1
++  serializedVersion: 3
+   m_Density: 1
+   m_Material: {fileID: 0}
+   m_IncludeLayers:
+@@ -26455,7 +26772,8 @@
+     m_Bits: 4294967295
+   m_IsTrigger: 1
+   m_UsedByEffector: 0
+-  m_UsedByComposite: 0
++  m_CompositeOperation: 0
++  m_CompositeOrder: 0
+   m_Offset: {x: -0.010968208, y: -0.021936655}
+   m_SpriteTilingProperty:
+     border: {x: 0, y: 0, z: 0, w: 0}
+@@ -26466,12 +26784,11 @@
+     drawMode: 0
+     adaptiveTiling: 0
+   m_AutoTiling: 0
+-  serializedVersion: 2
+   m_Size: {x: 0.90494156, y: 0.4881444}
+   m_EdgeRadius: 0
+ --- !u!50 &2081701336
+ Rigidbody2D:
+-  serializedVersion: 4
++  serializedVersion: 5
+   m_ObjectHideFlags: 0
+   m_CorrespondingSourceObject: {fileID: 0}
+   m_PrefabInstance: {fileID: 0}
+@@ -26482,8 +26799,8 @@
+   m_UseFullKinematicContacts: 0
+   m_UseAutoMass: 0
+   m_Mass: 0.0001
+-  m_LinearDrag: 0
+-  m_AngularDrag: 0
++  m_LinearDamping: 0
++  m_AngularDamping: 0
+   m_GravityScale: 0
+   m_Material: {fileID: 0}
+   m_IncludeLayers:
+@@ -26513,6 +26830,9 @@
+   m_ReflectionProbeUsage: 1
+   m_RayTracingMode: 0
+   m_RayTraceProcedural: 0
++  m_RayTracingAccelStructBuildFlagsOverride: 0
++  m_RayTracingAccelStructBuildFlags: 1
++  m_SmallMeshCulling: 1
+   m_RenderingLayerMask: 1
+   m_RendererPriority: 0
+   m_Materials:
+@@ -26767,6 +27087,9 @@
+   m_ReflectionProbeUsage: 1
+   m_RayTracingMode: 0
+   m_RayTraceProcedural: 0
++  m_RayTracingAccelStructBuildFlagsOverride: 0
++  m_RayTracingAccelStructBuildFlags: 1
++  m_SmallMeshCulling: 1
+   m_RenderingLayerMask: 1
+   m_RendererPriority: 0
+   m_Materials:
+@@ -26851,6 +27174,9 @@
+   m_ReflectionProbeUsage: 1
+   m_RayTracingMode: 0
+   m_RayTraceProcedural: 0
++  m_RayTracingAccelStructBuildFlagsOverride: 0
++  m_RayTracingAccelStructBuildFlags: 1
++  m_SmallMeshCulling: 1
+   m_RenderingLayerMask: 1
+   m_RendererPriority: 0
+   m_Materials:
+@@ -27074,3 +27400,6 @@
+   - {fileID: 2122160426}
+   - {fileID: 1162273490}
+   - {fileID: 2088031716}
++  - {fileID: 983029398}
++  - {fileID: 512088859}
++  - {fileID: 1412113563}
+Index: Assets/prefab.meta
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+>fileFormatVersion: 2\r\nguid: 97076239092e5ed468e07fe5a9662ebd\r\nfolderAsset: yes\r\nDefaultImporter:\r\n  externalObjects: {}\r\n  userData: \r\n  assetBundleName: \r\n  assetBundleVariant: \r\n
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/Assets/prefab.meta b/Assets/prefab.meta
+--- a/Assets/prefab.meta	(revision e0c6d93ef9e85173d91e117cd7f0a7b18eb6c03e)
++++ b/Assets/prefab.meta	(date 1744365308686)
+@@ -1,5 +1,5 @@
+ fileFormatVersion: 2
+-guid: 97076239092e5ed468e07fe5a9662ebd
++guid: 2d6082c0c1ae73a44afb1f3b6af94c83
+ folderAsset: yes
+ DefaultImporter:
+   externalObjects: {}
+Index: Assets/Script/Enemy/SoldierShieldAttack.cs
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+>using System.Collections;\r\nusing System.Collections.Generic;\r\nusing UnityEngine;\r\n\r\npublic class SoldierShieldAttack : MonoBehaviour\r\n{\r\n    [SerializeField] private float AtkCoolDown;\r\n    [SerializeField] private int Dmg;\r\n    [SerializeField] private float Range;\r\n    [SerializeField] private float ColliderDistance;        //độ rộng của Collider\r\n    [SerializeField] GameObject ProjectedPrefab;\r\n    [SerializeField] private Transform ShootPoint;\r\n    [SerializeField] private float bulletSpeed;\r\n    //[SerializeField] private AudioClip SwordSound;\r\n    private float CoolDownTimer = Mathf.Infinity;\r\n    Rigidbody2D rg;\r\n    Animator Anim;\r\n    public BoxCollider2D Box;\r\n    public LayerMask playerlayer;\r\n    private AnyaHealth PlayerHealth;\r\n\r\n    private SoldierShieldIdle EneMv;\r\n    void Start()\r\n    {\r\n        rg = GetComponent<Rigidbody2D>();\r\n        Anim = GetComponent<Animator>();\r\n        EneMv = GetComponentInParent<SoldierShieldIdle>();\r\n    }\r\n    void Update()\r\n    {\r\n        CoolDownTimer += Time.deltaTime;\r\n        if (PlayerSight())\r\n        {\r\n            if (CoolDownTimer >= AtkCoolDown && PlayerHealth.CurrentHealth > 0)\r\n            {\r\n                CoolDownTimer = 0;\r\n                Anim.SetTrigger(\"Atk\");\r\n                //SoundManager.instance.PlaySound(SwordSound);\r\n            }\r\n        }\r\n        if (EneMv != null)\r\n        {\r\n            EneMv.enabled = !PlayerSight();         // di chuyển nếu người chơi không trong tầm nhìn\r\n        }\r\n    }\r\n    private bool PlayerSight()      //tấn công khi người chơi trong tầm nhìn\r\n    {\r\n        RaycastHit2D hit = Physics2D.BoxCast(Box.bounds.center + transform.right * Range * transform.localScale.x * ColliderDistance,\r\n            new Vector3(Box.bounds.size.x * Range, Box.bounds.size.y, Box.bounds.size.z), 0, Vector2.left, 0, playerlayer);\r\n        if (hit.collider != null)\r\n        {\r\n            PlayerHealth = hit.transform.GetComponent<AnyaHealth>();\r\n        }\r\n\r\n        return hit.collider != null;\r\n    }\r\n    private void OnDrawGizmos()\r\n    {\r\n        Gizmos.color = Color.red;\r\n        Gizmos.DrawWireCube(Box.bounds.center + transform.right * Range * transform.localScale.x * ColliderDistance,\r\n            new Vector3(Box.bounds.size.x * Range, Box.bounds.size.y, Box.bounds.size.z));\r\n    }\r\n    private void ShootBullet()\r\n    {\r\n        if (PlayerSight()) // Chỉ bắn nếu người chơi trong tầm nhìn\r\n        {\r\n            // Tạo viên đạn tại ShootPoint\r\n            GameObject bullet = Instantiate(ProjectedPrefab, ShootPoint.position, ShootPoint.rotation);\r\n            Rigidbody2D bulletRb = bullet.GetComponent<Rigidbody2D>();\r\n\r\n            float direction = Mathf.Sign(transform.localScale.x); // 1 nếu quay phải, -1 nếu quay trái\r\n\r\n            // Bắn thẳng theo trục ngang (Vector2.right là trục x)\r\n            bulletRb.velocity = new Vector2(direction * bulletSpeed, 0f); // Bắn thẳng, không có thành phần y\r\n\r\n            Vector3 bulletScale = bullet.transform.localScale;\r\n            bulletScale.x = Mathf.Abs(bulletScale.x) * direction; // Lật ngang dựa trên hướng\r\n            bullet.transform.localScale = bulletScale;\r\n        }\r\n    }\r\n}\r\n
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/Assets/Script/Enemy/SoldierShieldAttack.cs b/Assets/Script/Enemy/SoldierShieldAttack.cs
+--- a/Assets/Script/Enemy/SoldierShieldAttack.cs	(revision e0c6d93ef9e85173d91e117cd7f0a7b18eb6c03e)
++++ b/Assets/Script/Enemy/SoldierShieldAttack.cs	(date 1744365308692)
+@@ -71,7 +71,7 @@
+             float direction = Mathf.Sign(transform.localScale.x); // 1 nếu quay phải, -1 nếu quay trái
+ 
+             // Bắn thẳng theo trục ngang (Vector2.right là trục x)
+-            bulletRb.velocity = new Vector2(direction * bulletSpeed, 0f); // Bắn thẳng, không có thành phần y
++            bulletRb.linearVelocity = new Vector2(direction * bulletSpeed, 0f); // Bắn thẳng, không có thành phần y
+ 
+             Vector3 bulletScale = bullet.transform.localScale;
+             bulletScale.x = Mathf.Abs(bulletScale.x) * direction; // Lật ngang dựa trên hướng
