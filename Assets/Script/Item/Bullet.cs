@@ -46,6 +46,10 @@ public class Bullet : MonoBehaviour
         {
             gameObject.SetActive(false);
         }
+        if (collision.CompareTag("Projected"))
+        {
+            gameObject.SetActive(false);
+        }
     }
     public void SetDirection(float direction)
     {

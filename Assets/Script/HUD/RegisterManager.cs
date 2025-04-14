@@ -7,9 +7,9 @@ using UnityEngine.SceneManagement;
 public class RegisterManager : MonoBehaviour
 {
     // UI
-    public InputField emailInput;
-    public InputField passwordInput;
     public InputField characterNameInput;
+    public InputField passwordInput;
+    public InputField emailInput;
     public InputField mobileInput;
     public Text errorMessage;
     public Button registerButton;
@@ -25,17 +25,17 @@ public class RegisterManager : MonoBehaviour
     // Đăng ký
     void OnRegisterClick()
     {
-        string email = emailInput.text;
-        string password = passwordInput.text;
         string characterName = characterNameInput.text;
+        string password = passwordInput.text;
+        string email = emailInput.text;
         string mobile = mobileInput.text;
 
         // Kiểm tra xem thông tin có đúng yêu cầu không
-        if (IsValidEmail(email) && IsValidPassword(password) &&
-            IsValidCharacterName(characterName) && IsValidMobilePhone(mobile))
+        if (IsValidCharacterName(characterName) && IsValidPassword(password) &&
+            IsValidEmail(email) && IsValidMobilePhone(mobile))
         {
             // Lưu tài khoản vào file
-            SaveAccount(password, email, characterName, mobile);
+            SaveAccount(characterName, password, email, mobile);
             errorMessage.text = "Đăng ký thành công! Chuyển sang màn hình đăng nhập.";
             SceneManager.LoadScene("Login");
         }
@@ -44,10 +44,10 @@ public class RegisterManager : MonoBehaviour
             errorMessage.text = "Thông tin không hợp lệ. Vui lòng kiểm tra lại!";
         }
     }
-    //Email
-    bool IsValidEmail(string email)
+    // Tên người dùng
+    bool IsValidCharacterName(string name)
     {
-        return Regex.IsMatch(email, @"^[^@]+@[^@]+\.[^@]+$");
+        return name.Length <= 15;       //tên ngắn hơn 15 kí tự
     }
     // Password
     bool IsValidPassword(string password)
@@ -55,13 +55,11 @@ public class RegisterManager : MonoBehaviour
         return Regex.IsMatch(password, @"^(?=.*[a-zA-Z])(?=.*\d)(?=.*[@#$%]).{6,20}$");
         // Có ít nhất một chữ cái, Có ít nhất một chữ số, Có ít nhất một ký tự đặc biệt 
     }
-
-    // Tên người dùng
-    bool IsValidCharacterName(string name)
+    //Email
+    bool IsValidEmail(string email)
     {
-        return name.Length <= 15;       //tên ngắn hơn 15 kí tự
+        return Regex.IsMatch(email, @"^[^@]+@[^@]+\.[^@]+$");
     }
-
     // SDT
     bool IsValidMobilePhone(string phone)
     {
@@ -69,9 +67,9 @@ public class RegisterManager : MonoBehaviour
     }
 
     // Lưu tài khoản vào file
-    void SaveAccount(string password, string email, string characterName, string mobile)
+    void SaveAccount(string characterName, string password, string email, string mobile)
     {
-        string accountData = $"\t{email}{password}\t{characterName}\t{mobile}";
+        string accountData = $"{characterName}\t{password}\t{email}\t{mobile}";
 
         // Ghi vào file (ghi thêm vào cuối file nếu đã có dữ liệu)
         using (StreamWriter writer = new StreamWriter(filePath, true))   //FilePath: Định dạng đường dẫn ở trên  @"E:\3\account.txt"

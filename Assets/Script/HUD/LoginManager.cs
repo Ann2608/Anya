@@ -12,7 +12,7 @@ public class LoginManager : MonoBehaviour
     public Button loginButton;
     public Button registerButton;
 
-    private string filePath = @"E:\3\account.txt"; // Lưu File
+    private string filePath = @"E:\5\account.txt"; // Lưu File
 
     void Start()
     {
@@ -24,10 +24,11 @@ public class LoginManager : MonoBehaviour
     // Đăng nhập
     void OnLoginClick()
     {
-        string username = usernameInput.text;
+        string characterName = usernameInput.text;
         string password = passwordInput.text;
+        Debug.Log($"Username entered: '{characterName}', Password entered: '{password}'");
 
-        if (CheckLogin(username, password))
+        if (CheckLogin(characterName, password))
         {
             errorMessage.text = "Đăng nhập thành công!";
             SceneManager.LoadScene("MainMenu");
@@ -50,13 +51,21 @@ public class LoginManager : MonoBehaviour
         if (File.Exists(filePath))
         {
             string[] accounts = File.ReadAllLines(filePath);
-            foreach (string account in accounts)        //kiểm tra thông tin tài khoản
+            foreach (string account in accounts)
             {
                 string[] accountDetails = account.Split('\t');
-                if (accountDetails[0] == username && accountDetails[1] == password)
-                //kiểm tra thông tin tài khoản có đúng hay không
+                if (accountDetails.Length >= 2)
                 {
-                    return true;
+                    Debug.Log($"So sánh: Input Username: '{username}', File Username: '{accountDetails[0]}'");
+                    Debug.Log($"So sánh: Input Password: '{password}', File Password: '{accountDetails[1]}'");
+                    if (accountDetails[0] == username && accountDetails[1] == password)
+                    {
+                        return true;
+                    }
+                }
+                else
+                {
+                    Debug.LogError("Dòng không đúng định dạng: " + account);
                 }
             }
         }

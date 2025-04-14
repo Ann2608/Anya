@@ -172,7 +172,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_Material: {fileID: 0}
-  m_Color: {r: 0.19607843, g: 0.19607843, b: 0.19607843, a: 1}
+  m_Color: {r: 1, g: 0, b: 0, a: 1}
   m_RaycastTarget: 1
   m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
   m_Maskable: 1
@@ -390,9 +390,9 @@ RectTransform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
-  - {fileID: 1199094152}
-  - {fileID: 931823548}
   - {fileID: 1470175815}
+  - {fileID: 931823548}
+  - {fileID: 1199094152}
   - {fileID: 1309985685}
   - {fileID: 1168219067}
   - {fileID: 9286370}
@@ -401,8 +401,8 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: -2.713, y: 0.00024891}
-  m_SizeDelta: {x: 131.3046, y: 236}
+  m_AnchoredPosition: {x: 0.5589, y: 0.00024891}
+  m_SizeDelta: {x: 516.0725, y: 236}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &602634606
 MonoBehaviour:
@@ -417,14 +417,14 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_Material: {fileID: 0}
-  m_Color: {r: 0.97735846, g: 0.49974358, b: 0.524447, a: 1}
+  m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_RaycastTarget: 1
   m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
   m_Maskable: 1
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_Sprite: {fileID: 0}
+  m_Sprite: {fileID: 21300000, guid: e955df91af3e88540a3720b60d73eae8, type: 3}
   m_Type: 0
   m_PreserveAspect: 0
   m_FillCenter: 1
@@ -454,7 +454,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 74423ac4184805e418f132000dcb35ae, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  firstInput: {fileID: 1199094149}
+  firstInput: {fileID: 1470175812}
 --- !u!1 &617347677
 GameObject:
   m_ObjectHideFlags: 0
@@ -958,9 +958,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: faba356a20d105742ab04b1a3caa2384, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  emailInput: {fileID: 1199094149}
-  passwordInput: {fileID: 931823545}
   characterNameInput: {fileID: 1470175812}
+  passwordInput: {fileID: 931823545}
+  emailInput: {fileID: 1199094149}
   mobileInput: {fileID: 1309985682}
   errorMessage: {fileID: 1367744534}
   registerButton: {fileID: 1168219069}
@@ -1189,7 +1189,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: -1.6696, y: 70.2}
+  m_AnchoredPosition: {x: -1.6696, y: -5}
   m_SizeDelta: {x: 92.3823, y: 30}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!1 &1211117929
@@ -1451,8 +1451,8 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 4.0480976, y: -101.85}
-  m_SizeDelta: {x: 314.8313, y: 32.3}
+  m_AnchoredPosition: {x: 4.0480976, y: -113.15671}
+  m_SizeDelta: {x: 314.8313, y: 54.9134}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1367744534
 MonoBehaviour:
@@ -1467,7 +1467,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_Material: {fileID: 0}
-  m_Color: {r: 0.19607843, g: 0.19607843, b: 0.19607843, a: 1}
+  m_Color: {r: 1, g: 0, b: 0, a: 1}
   m_RaycastTarget: 1
   m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
   m_Maskable: 1
@@ -1741,7 +1741,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: -1.6696, y: -9.7}
+  m_AnchoredPosition: {x: -1.6696, y: 70.8}
   m_SizeDelta: {x: 92.3823, y: 30}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!1 &1607199818

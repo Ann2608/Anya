@@ -13,6 +13,8 @@ public class AnyaHealth : MonoBehaviour
     [SerializeField] private float Immortal;            // thời gian bất tử
     [SerializeField] private float ChangeColorImmortal;         // nhân vật đổi màu khi bất tử
     private SpriteRenderer SpriteRenderer;          // đồi màu nhân vật trong Sprite
+    [Header("UI")]
+    [SerializeField] private UIPauseMenu uiPauseMenu;
 
     //[SerializeField] private AudioClip DeadSound;
     //[SerializeField] private AudioClip HurtSound;
@@ -40,13 +42,13 @@ public class AnyaHealth : MonoBehaviour
                 if (GetComponentInParent<AnyaMv>() != null)
                     GetComponent<AnyaMv>().enabled = false;
                 Dead = true;
+                if (uiPauseMenu != null)
+                {
+                    uiPauseMenu.GameOVer();
+                }
                 //SoundManager.instance.PlaySound(DeadSound);
             }
         }
-    }
-    public void HealthPlus(float plus)
-    {
-        CurrentHealth = Mathf.Clamp(CurrentHealth + plus, 0, MaxHealth);
     }
 
     private IEnumerator immortal()
@@ -66,7 +68,6 @@ public class AnyaHealth : MonoBehaviour
     public void respawn()
     {
         Dead = false;
-        HealthPlus(MaxHealth);
         Anim.ResetTrigger("Dead");
         Anim.Play("Idle");
         GetComponent<AnyaMv>().enabled = true;
