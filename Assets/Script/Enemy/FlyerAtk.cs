@@ -5,7 +5,6 @@ using UnityEngine;
 public class FlyerAtk : MonoBehaviour
 {
     [SerializeField] private float AtkCoolDown;
-    [SerializeField] private int Dmg;
     [SerializeField] private float Range;
     [SerializeField] private float ColliderDistance;        //độ rộng của Collider
     [SerializeField] GameObject ProjectedPrefab;

@@ -10,14 +10,13 @@ public class Bullet : MonoBehaviour
     private float Direction;
     private bool Hit;
     private float TimeDestroyBulletIfNoImpact;
-    
+
 
     private BoxCollider2D Box;
     private void Awake()
     {
         Box = GetComponent<BoxCollider2D>();
     }
-
     private void Update()
     {
         if (Hit) return;
@@ -47,6 +46,22 @@ public class Bullet : MonoBehaviour
             gameObject.SetActive(false);
         }
         if (collision.CompareTag("Projected"))
+        {
+            gameObject.SetActive(false);
+        }
+        if (collision.CompareTag("Arrow"))
+        {
+            gameObject.SetActive(false);
+        }
+        if (collision.CompareTag("Note"))
+        {
+            gameObject.SetActive(false);
+        }
+        if (collision.CompareTag("Platform"))
+        {
+            gameObject.SetActive(false);
+        }
+        if (collision.CompareTag("Coin"))
         {
             gameObject.SetActive(false);
         }

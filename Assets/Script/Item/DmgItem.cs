@@ -6,34 +6,10 @@ public class DmgItem : MonoBehaviour
 {
     public static event Action<int> OnDmgChange;
 
-    [SerializeField]
-    private string itemName;
-    [SerializeField]
-    private int quantity = 1;
-    [SerializeField]
-    private Sprite sprite;
-    [TextArea]
-    [SerializeField]
-    private string itemDescription;
-    [SerializeField]
-    private int dmgBoost;
-    [SerializeField]
-    private ItemType itemType = ItemType.DmgItem;
+    public int ID;
+    public string Name;
+    public int dmgBoost;
 
-    private InventoryManager inventoryManager;
-
-    private void Start()
-    {
-        inventoryManager = GameObject.Find("IvenCanvas").GetComponent<InventoryManager>();
-        if (sprite == null)
-        {
-            SpriteRenderer sr = GetComponent<SpriteRenderer>();
-            if (sr != null)
-            {
-                sprite = sr.sprite;
-            }
-        }
-    }
 
     private void OnTriggerEnter2D(Collider2D collision)
     {
@@ -50,7 +26,6 @@ public class DmgItem : MonoBehaviour
 
     public void Collect()
     {
-        inventoryManager.AddItem(itemName, quantity, sprite, itemDescription, itemType);
         OnDmgChange?.Invoke(dmgBoost);
         PickUp();
         Destroy(gameObject);
@@ -58,10 +33,10 @@ public class DmgItem : MonoBehaviour
 
     public virtual void PickUp()
     {
-        Sprite itemIcon = sprite;
+        Sprite IconItem = GetComponent<SpriteRenderer>().sprite;
         if (ItemPopup.Instance != null)
         {
-            ItemPopup.Instance.ShowItem(itemName, itemIcon);
+            ItemPopup.Instance.ShowItem(Name, IconItem);
         }
     }
 }

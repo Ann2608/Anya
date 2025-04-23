@@ -143,6 +143,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a4fb7c026153a1f409ae216524d2e0f0, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  DmgBoost: 2
   ID: 3
   Name: Dmg++
+  dmgBoost: 2

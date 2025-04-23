@@ -27,13 +27,13 @@ public class FlyerMV : MonoBehaviour
         initScale = Enemy.localScale;
     }
 
-    //private void OnDisable()            // vô hiệu hoá hoặc trước khi bị Destroy
-    //{
-    //    Anim.SetBool("Moving", false);
-    //}
-
     private void Update()
     {
+        if (Enemy == null)
+        {
+            enabled = false; // Tắt script nếu không còn Enemy
+            return;
+        }
         if (MvLeft)
         {
             if (Enemy.position.x >= LeftMv.position.x)      // đã đứng bên trái

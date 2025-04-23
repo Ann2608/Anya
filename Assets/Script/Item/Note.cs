@@ -4,7 +4,7 @@ using UnityEngine;
 
 public class Note : MonoBehaviour
 {
-    private string NoteContent = "A D Để di chuyển\n Space để nhảy\n Z để tấn công";
+    private string NoteContent = "A D Để di chuyển\n Space để nhảy\n Z để tấn công\n X để bắn súng \n Nhặt key để qua màn tiếp theo";
     private AnyaMv anya;
 
     private void OnTriggerEnter2D(Collider2D collision)

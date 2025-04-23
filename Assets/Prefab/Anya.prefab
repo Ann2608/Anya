@@ -238,7 +238,7 @@ MonoBehaviour:
   MvSpeed: 5
   NoteUI: {fileID: 0}
   NoteText: {fileID: 0}
-  JumpHigh: 8
+  JumpHigh: 10
   IsGround: 1
 --- !u!114 &8216887049713992170
 MonoBehaviour:
@@ -273,6 +273,8 @@ MonoBehaviour:
   AttackPoint: {fileID: 6820562188879678795}
   Range: 2
   AtkDmg: 2
+  SwordSound: {fileID: 8300000, guid: 02ee8eb2d01067c40955e5e106e0c5f2, type: 3}
+  ShootSound: {fileID: 8300000, guid: 81a78d9d4652bf246b4d67c19cd16e6b, type: 3}
 --- !u!114 &855599707724861499
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -285,9 +287,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 279dbf6e8e2eafd488ce6de917fc64e6, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  MaxHealth: 10
+  MaxHealth: 20
   Immortal: 1
   ChangeColorImmortal: 2
+  uiPauseMenu: {fileID: 0}
 --- !u!114 &7282389130875843092
 MonoBehaviour:
   m_ObjectHideFlags: 0

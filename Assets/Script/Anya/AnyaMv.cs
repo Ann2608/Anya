@@ -45,7 +45,10 @@ public class AnyaMv : MonoBehaviour
         SpeedItem.OnSpeedChange += Startspeedboost;
         NoteUI.SetActive(false);
     }
-
+    void OnDestroy()
+    {
+        SpeedItem.OnSpeedChange -= Startspeedboost; // Hủy đăng ký sự kiện
+    }
     public void  Startspeedboost(float mutiplyer)       // mutiplyer là giá trị của Speedboost tức là giá trị tăng tốc
     {
         StartCoroutine(SpeedboostCouroutine(mutiplyer));
@@ -92,7 +95,7 @@ public class AnyaMv : MonoBehaviour
 
     void Movement(float move)       // giá trị move từ -1 đến 1
     {
-        rg.linearVelocity = new Vector2(MvSpeed * move * Speedboost, rg.linearVelocity.y);
+        rg.velocity = new Vector2(MvSpeed * move * Speedboost, rg.velocity.y);
         Speed = Mathf.Abs(MvSpeed * move * Speedboost);
 
         // Kiểm tra đổi hướng
@@ -104,7 +107,7 @@ public class AnyaMv : MonoBehaviour
 
     void Jump()
     {
-        rg.linearVelocity = new Vector2(rg.linearVelocity.x, JumpHigh);
+        rg.velocity = new Vector2(rg.velocity.x, JumpHigh);
         Anim.SetBool("IsJumping", true);
         //SoundManager.instance.PlaySound(JumpSound);
     }

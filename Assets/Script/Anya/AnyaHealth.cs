@@ -51,6 +51,10 @@ public class AnyaHealth : MonoBehaviour
         }
     }
 
+    public void HealthPlus(float plus)
+    {
+        CurrentHealth = Mathf.Clamp(CurrentHealth + plus, 0, MaxHealth);
+    }
     private IEnumerator immortal()
     {
         Physics2D.IgnoreLayerCollision(3, 6, true);         // hàm chỉ định hai vật thể không va chạm với nhau

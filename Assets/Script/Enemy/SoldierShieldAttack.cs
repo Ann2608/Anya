@@ -5,7 +5,6 @@ using UnityEngine;
 public class SoldierShieldAttack : MonoBehaviour
 {
     [SerializeField] private float AtkCoolDown;
-    [SerializeField] private int Dmg;
     [SerializeField] private float Range;
     [SerializeField] private float ColliderDistance;        //độ rộng của Collider
     [SerializeField] GameObject ProjectedPrefab;
@@ -71,7 +70,7 @@ public class SoldierShieldAttack : MonoBehaviour
             float direction = Mathf.Sign(transform.localScale.x); // 1 nếu quay phải, -1 nếu quay trái
 
             // Bắn thẳng theo trục ngang (Vector2.right là trục x)
-            bulletRb.linearVelocity = new Vector2(direction * bulletSpeed, 0f); // Bắn thẳng, không có thành phần y
+            bulletRb.velocity = new Vector2(direction * bulletSpeed, 0f); // Bắn thẳng, không có thành phần y
 
             Vector3 bulletScale = bullet.transform.localScale;
             bulletScale.x = Mathf.Abs(bulletScale.x) * direction; // Lật ngang dựa trên hướng

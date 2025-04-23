@@ -21,7 +21,7 @@ public class AnyaAtk : MonoBehaviour
     [Header("Sword")]
     private bool HasSword;
 
-    [Header("Atk")]
+    [Header("PunchAtk")]
     public Transform AttackPoint;
     public float Range;
     public int AtkDmg;
@@ -29,7 +29,8 @@ public class AnyaAtk : MonoBehaviour
     private float CoolDownTimer = Mathf.Infinity;
 
 
-    //[SerializeField] private AudioClip SwordSound;
+    [SerializeField] private AudioClip SwordSound;
+    [SerializeField] private AudioClip ShootSound;
     void Awake()
     {
         Anim = GetComponent<Animator>();
@@ -65,7 +66,7 @@ public class AnyaAtk : MonoBehaviour
     }
     private void SwordAttack()
     {
-        //SoundManager.instance.PlaySound(SwordSound);
+        AudioManager.instance.PlaySound(SwordSound);
         Anim.SetTrigger("SwordAttack");
         CoolDownTimer = 0;
         Collider2D[] HitEnemy = Physics2D.OverlapCircleAll(AttackPoint.position, Range, Enemylayer);
@@ -91,7 +92,7 @@ public class AnyaAtk : MonoBehaviour
     }
     private void Attack3()
     {
-        //SoundManager.instance.PlaySound(SwordSound);
+        AudioManager.instance.PlaySound(ShootSound);
         Anim.SetTrigger("GunAttack");
         CoolDownTimer = 0;
         Bullet[Continuousshooting()].transform.position = Firepoint.position;
@@ -100,7 +101,7 @@ public class AnyaAtk : MonoBehaviour
 
     private int Continuousshooting()
     {
-        for(int i = 0; i < Bullet.Length; i++)
+        for (int i = 0; i < Bullet.Length; i++)
         {
             if (!Bullet[i].activeInHierarchy)
                 return i;

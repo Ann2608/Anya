@@ -75,7 +75,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c8b498ca735217041bbbde8db6ef53ba, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  DmgSword: 5
+  DmgSword: 7
 --- !u!95 &4971778262508447026
 Animator:
   serializedVersion: 5

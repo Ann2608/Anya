@@ -9,6 +9,9 @@ TagManager:
   - Note
   - Item
   - Projected
+  - Coin
+  - Platform
+  - Arrow
   layers:
   - Default
   - TransparentFX

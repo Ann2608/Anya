@@ -3,32 +3,8 @@ using static SpeedItem;
 
 public class SwordItem : MonoBehaviour
 {
-    [SerializeField]
-    private string itemName;
-    [SerializeField]
-    private int quantity = 1;
-    [SerializeField]
-    private Sprite sprite;
-    [TextArea]
-    [SerializeField]
-    private string itemDescription;
-    [SerializeField]
-    private ItemType itemType = ItemType.SwordItem;
-
-    private InventoryManager inventoryManager;
-
-    private void Start()
-    {
-        inventoryManager = GameObject.Find("IvenCanvas").GetComponent<InventoryManager>();
-        if (sprite == null)
-        {
-            SpriteRenderer sr = GetComponent<SpriteRenderer>();
-            if (sr != null)
-            {
-                sprite = sr.sprite;
-            }
-        }
-    }
+    public int ID;
+    public string Name;
 
     private void OnTriggerEnter2D(Collider2D collision)
     {
@@ -45,17 +21,16 @@ public class SwordItem : MonoBehaviour
 
     public void Collect()
     {
-        inventoryManager.AddItem(itemName, quantity, sprite, itemDescription, itemType);
         PickUp();
         Destroy(gameObject);
     }
 
     public virtual void PickUp()
     {
-        Sprite itemIcon = sprite;
+        Sprite IconItem = GetComponent<SpriteRenderer>().sprite;
         if (ItemPopup.Instance != null)
         {
-            ItemPopup.Instance.ShowItem(itemName, itemIcon);
+            ItemPopup.Instance.ShowItem(Name, IconItem);
         }
     }
 }
